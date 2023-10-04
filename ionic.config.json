@@ -1,0 +1,7 @@
+{
+  "name": "Transub.id",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
