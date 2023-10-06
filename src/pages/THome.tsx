@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -8,7 +8,12 @@ import { collection, getDoc, getDocs, getFirestore, DocumentData, DocumentSnapsh
 
 // Import Firebase Cloud Messaging untuk mengirim notifikasi
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-
+import { FaArrowAltCircleRight, FaDollarSign, FaLocationArrow } from 'react-icons/fa';
+import {MdLocationOn, MdOutlinePayments} from 'react-icons/md'
+import {RiUserLocationLine} from 'react-icons/ri'
+import {GrMapLocation} from 'react-icons/gr'
+import {IoIosArrowForward} from 'react-icons/io'
+import { push } from 'ionicons/icons';
 const db = getFirestore();
 const messaging:any = getMessaging();
 
@@ -21,7 +26,9 @@ const THome: React.FC = () => {
     const history = useHistory();
     const [user, setUser] = React.useState<any>('');
     const [authenticated, setAuthenticated] = React.useState(false);
-
+    function InputAntar(){
+        history.push('/antar')
+    }
     onAuthStateChanged(auth, (user) => {
         if (user) {
             console.log(user);
@@ -71,7 +78,7 @@ const THome: React.FC = () => {
                         {user.displayName && user.displayName?.split(" ").map((kata: any) => kata[0]).join("").toUpperCase().substring(0, 2)}
                     </Link>
                 </div>
-                <div>
+                {/* <div>
                     <h1 className='mb-6'>Driver yang tersedia</h1>
                     {
                         data.map((item: AvailableData) => {
@@ -92,8 +99,39 @@ const THome: React.FC = () => {
                             )
                         })
                     }
+                </div> */}
+               <div className='h-[360px] w-[755px] bg-gradient-to-b to-[#0097B2] from-[#11009E] absolute top-0 -z-10 rounded-b-full mx-auto left-1/2 transform -translate-x-1/2'>
+</div>
+
+                <div className='flex flex-col gap-6 mt-10'>
+                <button onClick={InputAntar}  className='flex flex-row gap-4  items-center bg-white p-4 rounded-3xl w-full'>
+                <GrMapLocation size={25} color=''></GrMapLocation>
+                <div className='flex flex-row items-center justify-between w-full'>
+                <h1>Mau diantar ke mana?</h1>
+                <IoIosArrowForward size={20}></IoIosArrowForward></div>
+                </button>
+                <button className='flex flex-row gap-4 items-center bg-white p-4 w-full rounded-3xl'>
+                <RiUserLocationLine size={25} color=''></RiUserLocationLine>
+                <div className='flex flex-row items-center justify-between w-full'>
+                <h1>Mau dijemput di mana?</h1>
+                <IoIosArrowForward size={20}></IoIosArrowForward></div>
+                </button>
+                
                 </div>
+                
             </IonContent>
+            <IonFooter>
+            <div className=' p-10 rounded-2xl'>
+            <div className='flex flex-row items-center gap-2 mb-6'>
+            <MdOutlinePayments size={25}></MdOutlinePayments>
+            <h1>Tunai</h1>
+            </div>
+            <button className='w-full flex flex-row gap-4 items-center justify-center text-xl font-bold bg-blue-900 text-white p-3 rounded-3xl'>
+            <h1>Pesan Transub</h1>
+            <FaArrowAltCircleRight></FaArrowAltCircleRight>
+            </button>
+            </div>
+            </IonFooter>
         </IonPage>
     );
 };

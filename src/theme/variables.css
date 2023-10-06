@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.leaflet-container {
+  width: 100wh; 
+  height: 100vh;
+}
 /** Ionic CSS Variables **/
 :root {
   
@@ -60,14 +65,6 @@
   --ion-color-danger-contrast-rgb: 255, 255, 255;
   --ion-color-danger-shade: #cf3c4f;
   --ion-color-danger-tint: #ed576b;
-
-  /** dark **/
-  --ion-color-dark: #222428;
-  --ion-color-dark-rgb: 34, 36, 40;
-  --ion-color-dark-contrast: #ffffff;
-  --ion-color-dark-contrast-rgb: 255, 255, 255;
-  --ion-color-dark-shade: #1e2023;
-  --ion-color-dark-tint: #383a3e;
 
   /** medium **/
   --ion-color-medium: #e2e8f0;

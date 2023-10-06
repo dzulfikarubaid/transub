@@ -33,7 +33,7 @@ const Tabs: React.FC = () => {
                     <Redirect to='/app/home'></Redirect>
                 </Route>
             </IonRouterOutlet>
-            <IonTabBar color={'tertiary'} slot='bottom' style={{paddingLeft:'20px',paddingRight:'20px'}}>
+            <IonTabBar color={'white'} slot='bottom' style={{paddingLeft:'20px',paddingRight:'20px', paddingTop:'10px', paddingBottom:'10px'}} className='border-t-4 border-solid border-gray-200'>
                 <IonTabButton tab='home' href='/app/home'>
                     <IonIcon icon={homeOutline}>
                     </IonIcon>

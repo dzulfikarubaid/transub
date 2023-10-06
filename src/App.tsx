@@ -30,6 +30,7 @@ import Profile from './pages/TProfile';
 import PostDetail from './pages/PostDetail';
 import Apply from './pages/Apply';
 import Kl from './pages/Kl';
+import Antar from './pages/TAntar'
 import Success from './pages/Success';
 import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
@@ -42,6 +43,9 @@ const App = () => {
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+      <Route exact path={'/antar'}>
+      <Antar></Antar>
+      </Route>
         <Route exact path="/profile">
           <Profile></Profile>
         </Route>
