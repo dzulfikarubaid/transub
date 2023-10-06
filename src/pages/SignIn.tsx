@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { logoIonic, logoFacebook, logoGoogle } from 'ionicons/icons';
 import { GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import {auth} from '../firebaseConfig';
+import { FcGoogle } from 'react-icons/fc';
+import './signin.css'
 function SignIn() {
     const [error, setError] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -65,22 +67,34 @@ function SignIn() {
     <IonPage>
         
         <IonContent >
-            <div className='ion-padding'>
+            <div className='ion-padding p-16'>
+                <h1 className='text-blue-700 text-2xl font-semibold mb-4'>Welcome back!</h1>
+                <p>Hello there, sign in to continue</p>
+                <div className='mt-20'>
                 <h1 className='text-red-500 text-center'>{error}</h1>
-                <form action="" style={{display:'flex', flexDirection:'column', padding:'15px', gap:'20px'}}>
+                <form action="" style={{display:'flex', flexDirection:'column', gap:'20px'}}>
                 <label htmlFor="email">Email</label>
-                <input className='border p-4 focus:outline-blue-300' type='email' onChange={(e:any)=>setEmail(e.target.value)}></input>
+                <input placeholder='Enter your email' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='email' onChange={(e:any)=>setEmail(e.target.value)}></input>
                 <label htmlFor="password">Password</label>
-                <input className='border p-4 focus:outline-blue-300' type='password' onChange={(e:any)=>setPassword(e.target.value)}></input>
+                <input placeholder='Enter your password' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='password' onChange={(e:any)=>setPassword(e.target.value)}></input>
                 
-                <IonButton onClick={signin}>Sign In</IonButton>
-                <IonButton onClick={signinGoogle}>Sign In with Google</IonButton>
+                <IonButton className='capitalize' onClick={signin}>
+                    Sign In</IonButton>
+                <h1 className='text-center'>or</h1>
+                <IonButton className='google capitalize ' onClick={signinGoogle}><div className='flex justify-center items-center flex-row gap-4'>
+                <FcGoogle size={25}></FcGoogle>
+                    <h1>Continue with Google</h1>
+                    </div></IonButton>
                 </form>
-                <div style={{display:'flex', justifyContent:'center', flexDirection:'column', textAlign:'center'}}>
+                <div style={{display:'flex', justifyContent:'center', flexDirection:'column', textAlign:'center'}} className='mt-6'>
                     
-                    <p>Don't have an account?<span><Link className='text-blue-500' to={'/signup'} style={{textDecoration:'none',fontWeight:'bold', alignSelf:'center'}}> Sign Up</Link></span> </p>
+                    <p>Don't have an account?</p>
+                    <Link className='text-blue-800 mt-6 rounded-xl w-full p-3 bg-[#DADADA]' to={'/signup'} style={{textDecoration:'none',fontWeight:'bold', alignSelf:'center'}}> Sign Up</Link>
+                     
                 
                 </div>
+                </div>
+                
             </div>
         </IonContent>
 

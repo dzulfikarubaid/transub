@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword,GoogleAuthProvider, onAuthStateChanged, 
 import { logoFacebook, logoGoogle } from 'ionicons/icons';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { FcGoogle } from 'react-icons/fc';
 
 const db = getFirestore();
 const SignUp: React.FC = () => {
@@ -93,22 +94,30 @@ const SignUp: React.FC = () => {
                 <h1 className='text-red-500 text-center'>{error}</h1>
                 <form action="" style={{display:'flex', flexDirection:'column', padding:'15px', gap:'20px'}}>
                 <label htmlFor="name">Full Name</label>
-                <input className='border p-4 focus:outline-blue-300' type='text' onChange={(e:any)=>setName(e.target.value)}></input>
+                <input placeholder='Enter your name' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='text' onChange={(e:any)=>setName(e.target.value)}></input>
                 <label htmlFor="email">Email</label>
-                <input className='border p-4 focus:outline-blue-300' type='email' onChange={(e:any)=>setEmail(e.target.value)}></input>
+                <input placeholder='Enter your email' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='email' onChange={(e:any)=>setEmail(e.target.value)}></input>
                 <label htmlFor="password">Password</label>
-                <input className='border p-4 focus:outline-blue-300' type='password' onChange={(e:any)=>setPassword(e.target.value)}></input>
+                <input placeholder='Enter your password' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='password' onChange={(e:any)=>setPassword(e.target.value)}></input>
                 <label htmlFor="password">Confirm Password</label>
-                <input className='border p-4 focus:outline-blue-300' type='password' onChange={(e:any)=>setConfirmPassword(e.target.value)}></input>
+                <input placeholder='Enter your password again' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='password' onChange={(e:any)=>setConfirmPassword(e.target.value)}></input>
                
-                <IonButton onClick={signup}>Sign Up</IonButton>
-                <IonButton onClick={signupGoogle}>Sign Up with Google</IonButton>
-                </form>
-                <div style={{display:'flex', justifyContent:'center', flexDirection:'column', textAlign:'center'}}>
-                    
-                    <p>Already have an account?<span><Link to={'/signin'} className='text-blue-500' style={{textDecoration:'none',fontWeight:'bold', alignSelf:'center'}}> Sign In</Link></span> </p>
-                    
+                <IonButton className='capitalize' onClick={signup}>Sign Up</IonButton>
+                <h1 className='text-center'>or</h1>
+                <IonButton className='capitalize google'  onClick={signupGoogle}>
+                    <div className='flex flex-row gap-4 justify-center items-center'>
+                        <FcGoogle size={25}></FcGoogle>
+                        <h1>Sign Up with Google</h1>
                     </div>
+                </IonButton>
+                </form>
+                <div style={{display:'flex', justifyContent:'center', flexDirection:'column', textAlign:'center'}} className='mt-6'>
+                    
+                    <p>Already have an account?</p>
+                    <Link className='text-blue-800 mt-6 rounded-xl w-full p-3 bg-[#DADADA]' to={'/signin'} style={{textDecoration:'none',fontWeight:'bold', alignSelf:'center'}}> Sign In</Link>
+                     
+                
+                </div>
                 </div>
     
         </IonContent>
