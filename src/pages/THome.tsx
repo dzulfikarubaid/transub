@@ -14,6 +14,7 @@ import {RiUserLocationLine} from 'react-icons/ri'
 import {GrMapLocation} from 'react-icons/gr'
 import {IoIosArrowForward} from 'react-icons/io'
 import { push } from 'ionicons/icons';
+import { Preferences } from '@capacitor/preferences';
 const db = getFirestore();
 const messaging:any = getMessaging();
 
@@ -23,12 +24,41 @@ interface AvailableData {
 }
 
 const THome: React.FC = () => {
+
+    const [valueLat, setValueLat] = useState<any>('')
+    const [valueLang, setValueLang] = useState<any>('')
     const history = useHistory();
+    
     const [user, setUser] = React.useState<any>('');
     const [authenticated, setAuthenticated] = React.useState(false);
     function InputAntar(){
         history.push('/antar')
     }
+    const fetchPreferences = async () => {
+    try {
+      const [lat, lang] = await Promise.all([
+        Preferences.get({ key: 'lat' }),
+        Preferences.get({ key: 'lang' }),
+      ]);
+
+      setValueLat(lat.value);
+      setValueLang(lang.value);
+    } catch (error) {
+      console.error('Error fetching preferences:', error);
+    }
+  };
+    useEffect(() => {
+        fetchPreferences()
+}, [valueLang]);
+
+const checkName = async () => {
+  const { value } = await Preferences.get({ key: 'lat' });
+console.log(value)
+ return value
+};
+
+    console.log(valueLat, valueLang);
+  
     onAuthStateChanged(auth, (user) => {
         if (user) {
             console.log(user);
@@ -107,7 +137,10 @@ const THome: React.FC = () => {
                 <button onClick={InputAntar}  className='flex flex-row gap-4  items-center bg-white p-4 rounded-3xl w-full'>
                 <GrMapLocation size={25} color=''></GrMapLocation>
                 <div className='flex flex-row items-center justify-between w-full'>
-                <h1>Mau diantar ke mana?</h1>
+                {
+                    valueLat ? `${valueLat}, ${valueLang}` :
+                     <h1>Mau diantar ke mana?</h1>
+                }
                 <IoIosArrowForward size={20}></IoIosArrowForward></div>
                 </button>
                 <button className='flex flex-row gap-4 items-center bg-white p-4 w-full rounded-3xl'>
