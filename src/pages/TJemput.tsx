@@ -16,7 +16,7 @@ import { Preferences } from '@capacitor/preferences'
 import { useHistory } from 'react-router'
 import axios from 'axios'
 
-const Antar: React.FC = () => {
+const Jemput: React.FC = () => {
     const [outputPosition, setOutputPosition] = useState<any>({
       lat: '',lng:''
     })
@@ -56,7 +56,7 @@ const Antar: React.FC = () => {
   return location
   }
 
-  const [titikAntar, setTitikAntar] = useState<any>('')
+
 
   /**
    * Trigger a 'resize' event when Page has finished rendering and animating, so leaflet map can read a consistent height value.
@@ -67,32 +67,31 @@ const Antar: React.FC = () => {
   const ZOOM_LEVEL = 16
   const mapRef:any = useRef()
   const location:any = geoLocation()
-
-  function addLocation(){
-    Preferences.set({
-    key: 'latantar',
+  const [titikJemput, setTitikJemput] = useState<any>('')
+  async function addLocation(){
+   await Preferences.set({
+    key: 'latjemput',
     value: outputPosition.lat,
   });
-    Preferences.set({
-    key: 'lngantar',
+   await Preferences.set({
+    key: 'lngjemput',
     value: outputPosition.lng,
-  })
+  });
   if(outputPosition.lat){
-   axios.get(
-      `https://api.geoapify.com/v1/geocode/reverse?lat=${outputPosition.lat}&lon=${outputPosition.lng}&lang=id&apiKey=a635989136eb4253bdd4b000412173c6`
-    )
-  .then((res:any)=>{
-      setTitikAntar(res.data.features[0]['properties']['formatted'].toString())
-      Preferences.set({
-        key: 'titikantar',
-        value: res.data.features[0]['properties']['formatted'].toString()
-      })
-  })
-  .catch((err)=>{
-      console.log(err)
-  })
-  }
-
+    axios.get(
+       `https://api.geoapify.com/v1/geocode/reverse?lat=${outputPosition.lat}&lon=${outputPosition.lng}&lang=id&apiKey=a635989136eb4253bdd4b000412173c6`
+     )
+   .then((res:any)=>{
+       setTitikJemput(res.data.features[0]['properties']['formatted'].toString())
+       Preferences.set({
+         key: 'titikjemput',
+         value: res.data.features[0]['properties']['formatted'].toString()
+       })
+   })
+   .catch((err)=>{
+       console.log(err)
+   })
+   }
   console.log(outputPosition.lat, outputPosition.lng)
   history.goBack()
 
@@ -104,7 +103,6 @@ const Antar: React.FC = () => {
     setUserlocation(true)
     map?.flyTo([location.coordinates.lat, location.coordinates.lng], ZOOM_LEVEL)
     setOutputPosition(location.coordinates)
-    console.log(location.coordinates)
 };
     
   return <button  className='bg-gray-800 rounded-full p-3' onClick={onClick}>
@@ -144,7 +142,6 @@ const center = { lat:  -7.288777649928778 , lng: 112.79206222243513 }
     center={{ lat:  -7.288777649928778 , lng: 112.79206222243513 }}
     zoom={16}
     scrollWheelZoom={false}
-    touchZoom={true}
     ref={setMap}
     >
     <TileLayer
@@ -174,4 +171,4 @@ const center = { lat:  -7.288777649928778 , lng: 112.79206222243513 }
     </IonPage>
   );
 }
-export default Antar
+export default Jemput

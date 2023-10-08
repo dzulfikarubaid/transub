@@ -6,6 +6,7 @@
 .leaflet-container {
   width: 100wh; 
   height: 100vh;
+  border-radius: 30px !important;
 }
 /** Ionic CSS Variables **/
 :root {

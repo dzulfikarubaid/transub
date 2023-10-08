@@ -19,6 +19,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
+import Jemput from './pages/TJemput';
 import './theme/variables.css';
 import SignUp from './pages/SignUp';
 import Start from './pages/Start';
@@ -43,6 +44,7 @@ const App = () => {
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+        <Route exact path={'/jemput'}><Jemput/> </Route>
       <Route exact path={'/antar'}>
       <Antar></Antar>
       </Route>

@@ -15,53 +15,74 @@ import {GrMapLocation} from 'react-icons/gr'
 import {IoIosArrowForward} from 'react-icons/io'
 import { push } from 'ionicons/icons';
 import { Preferences } from '@capacitor/preferences';
+import axios from 'axios';
 const db = getFirestore();
 const messaging:any = getMessaging();
-
+import Routing from './TRouting';
 interface AvailableData {
     id: string;
     data: () => DocumentData;
 }
 
 const THome: React.FC = () => {
-
-    const [valueLat, setValueLat] = useState<any>('')
-    const [valueLang, setValueLang] = useState<any>('')
+    const [titikAntar, setTitikAntar] = useState<any>('')
+    const [titikJemput, setTitikJemput] = useState<any>('')
+    const [valueLatAntar, setValueLat] = useState<any>('')
+    const [valuelngAntar, setValuelng] = useState<any>('')
     const history = useHistory();
-    
+    const [valueLatjemput, setValueLatjemput] = useState<any>('')
+    const [valuelngjemput, setValuelngjemput] = useState<any>('')
     const [user, setUser] = React.useState<any>('');
     const [authenticated, setAuthenticated] = React.useState(false);
     function InputAntar(){
         history.push('/antar')
     }
-    const fetchPreferences = async () => {
+    function InputJemput(){
+        history.push('/jemput')
+    }
+
+    const fetchAntar = async () => {
     try {
-      const [lat, lang] = await Promise.all([
-        Preferences.get({ key: 'lat' }),
-        Preferences.get({ key: 'lang' }),
+      const [latAntar, lngAntar, titikantar] = await Promise.all([
+        Preferences.get({ key: 'latantar' }),
+        Preferences.get({ key: 'lngantar' }),
+        Preferences.get({ key: 'titikantar' }),
       ]);
 
-      setValueLat(lat.value);
-      setValueLang(lang.value);
+      setValueLat(latAntar.value);
+      setValuelng(lngAntar.value);
+      setTitikAntar(titikantar.value);
+
     } catch (error) {
       console.error('Error fetching preferences:', error);
     }
   };
-    useEffect(() => {
-        fetchPreferences()
-}, [valueLang]);
+  const fetchJemput = async () => {
+    try {
+      const [latjemput, lngjemput, titikjemput] = await Promise.all([
 
-const checkName = async () => {
-  const { value } = await Preferences.get({ key: 'lat' });
-console.log(value)
- return value
-};
-
-    console.log(valueLat, valueLang);
+        Preferences.get({ key: 'latjemput' }),
+        Preferences.get({ key: 'lngjemput' }),
+        Preferences.get({ key: 'titikjemput' }),
+      ]);
+      setValueLatjemput(latjemput.value);
+      setValuelngjemput(lngjemput.value);
+      setTitikJemput(titikjemput.value);
+    } catch (error) {
+      console.error('Error fetching preferences:', error);
+    }
+  };
+useEffect(() => {
+    setInterval(() => {
+        fetchAntar();
+        fetchJemput();
+        
+    },500)
+},[]);
   
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            console.log(user);
+            // console.log(user);
             setUser(user);
         } else {
             history.push('/signin');
@@ -99,6 +120,32 @@ console.log(value)
             console.error('Gagal mengirim notifikasi:', error);
         }
     };
+    const RoutingMap = () => {
+        return (
+          <Routing
+            x1={valueLatAntar}
+            y1={valuelngAntar}
+            x2={valueLatjemput}
+            y2={valuelngjemput}
+          />
+        );
+      };
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+          // Panggil RoutingMap dan render di dalam komponen ini
+          
+    
+          // Render RoutingMap di dalam komponen (gunakan state atau lainnya)
+          // Misalnya, Anda bisa menggunakan state untuk menyimpan komponen yang akan dirender
+          RoutingMap()
+        }, 100);
+    
+        // Membersihkan interval saat komponen tidak lagi digunakan atau di-unmount
+        return () => clearInterval(intervalId);
+      }, [valueLatAntar, valuelngAntar, valueLatjemput, valuelngjemput]);
+    
+      const [renderedComponent, setRenderedComponent] = useState(<></>);
+
 
     return (
         <IonPage>
@@ -138,19 +185,30 @@ console.log(value)
                 <GrMapLocation size={25} color=''></GrMapLocation>
                 <div className='flex flex-row items-center justify-between w-full'>
                 {
-                    valueLat ? `${valueLat}, ${valueLang}` :
+                    titikAntar? <h1 className='text-[14px] text-left'>{titikAntar}</h1> :
                      <h1>Mau diantar ke mana?</h1>
                 }
                 <IoIosArrowForward size={20}></IoIosArrowForward></div>
                 </button>
-                <button className='flex flex-row gap-4 items-center bg-white p-4 w-full rounded-3xl'>
+                <button onClick={InputJemput} className='flex flex-row gap-4 items-center bg-white p-4 w-full rounded-3xl'>
                 <RiUserLocationLine size={25} color=''></RiUserLocationLine>
                 <div className='flex flex-row items-center justify-between w-full'>
-                <h1>Mau dijemput di mana?</h1>
+                {
+                    titikJemput? <h1 className='text-[14px] text-left'>{titikJemput}</h1> : <h1>Mau dijemput di mana?</h1>
+                }
                 <IoIosArrowForward size={20}></IoIosArrowForward></div>
                 </button>
-                
                 </div>
+                {
+                    valueLatAntar!='' && valueLatjemput!='' ?
+                    <div className='relative mt-10'>
+                        <RoutingMap></RoutingMap>
+                    </div>
+                    :
+                    <></>
+                    
+                }
+               
                 
             </IonContent>
             <IonFooter>
