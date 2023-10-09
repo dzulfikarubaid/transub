@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { MapContainer, Marker, Popup, useMapEvents, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import './TRouting.css'
+import './TLeafletlogo.css'
 import {
   useIonViewDidEnter,
 
@@ -21,7 +22,10 @@ import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
 const createRoutineMachineLayer = (props:any) => {
-    const { x1, y1, x2, y2 } = props
+    const { x1, y1, x2, y2 }:any = props
+    const [waktu, setWaktu] = React.useState(0);
+    const [distance, setDistance] = React.useState(0);
+    const [price, setPrice] = React.useState(0);
   const instance = L.Routing.control({
     waypoints: [
       L.latLng(x1, y1),
@@ -34,17 +38,45 @@ const createRoutineMachineLayer = (props:any) => {
     show: false,
     addWaypoints: false,
     fitSelectedRoutes: true,
-    showAlternatives: false
+    showAlternatives: false,
+    draggableWaypoints: false
   });
-
+  instance.on('routesfound', function(e:any) {
+    var routes = e.routes;
+    var summary = routes[0].summary;
+    // alert distance and time in km and minutes
+    Preferences.set({
+        key: 'distance',
+        value: (summary.totalDistance / 1000).toFixed(2).toString(),
+      });
+    Preferences.set({
+        key: 'waktu',
+        value: Math.round(summary.totalTime % 3600 / 60).toString(),
+      });
+   if(summary.totalDistance/1000 > 5){
+    Preferences.set({
+        key: 'price',
+        value: Math.round(5 * 2000 + (summary.totalDistance / 1000-5) * 1000).toString(),
+    })
+   }
+   else{
+    Preferences.set({
+        key: 'price',
+        value: Math.round(summary.totalDistance / 1000 * 2000).toString(),
+    })
+    
+   }
+ })
   return instance;
 };
+
+
 
 const RoutingMachine = createControlComponent(createRoutineMachineLayer);
 
 
 const Routing: React.FC = (props:any) => {
-    const { x1, y1, x2, y2 } = props
+    const { x1, y1, x2, y2 }:any = props
   
  
   return (
@@ -53,13 +85,17 @@ const Routing: React.FC = (props:any) => {
       <MapContainer
      style={{ width: '300px !important', height: '400px', margin: '0 auto' }}
     center={{ lat:  -7.288777649928778 , lng: 112.79206222243513 }}
-    zoom={16}
+    zoom={15}
     scrollWheelZoom={false}
-   
+    touchZoom={false}
+    doubleClickZoom={true}
+    
     >
     <TileLayer
 
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
+
+
     />
     <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
 

@@ -4,6 +4,7 @@ import { render, renderHook } from '@testing-library/react'
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, useMapEvents, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
+import './TLeafletlogo.css'
 import '../theme/variables.css'
 import {
   useIonViewDidEnter,
@@ -149,7 +150,7 @@ const center = { lat:  -7.288777649928778 , lng: 112.79206222243513 }
     >
     <TileLayer
 
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
     />
 
       <Marker ref={markerRef} eventHandlers={eventHandlers} draggable={true} position={

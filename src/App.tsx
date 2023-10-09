@@ -36,6 +36,7 @@ import Success from './pages/Success';
 import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
+import WhatsApp from './pages/TWa';
 setupIonicReact();
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path={'/jemput'}><Jemput/> </Route>
+        <Route exact path={'/WA'}><WhatsApp/></Route>
       <Route exact path={'/antar'}>
       <Antar></Antar>
       </Route>

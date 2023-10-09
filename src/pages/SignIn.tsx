@@ -12,11 +12,7 @@ function SignIn() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const history = useHistory()
-    onAuthStateChanged(auth, (user) => {
-        if(user){
-            history.push('/app')
-        }
-    })
+   
     const signin = async () =>{
         try{
             const user = await signInWithEmailAndPassword(auth, email, password)
@@ -78,7 +74,7 @@ function SignIn() {
                 <label htmlFor="password">Password</label>
                 <input placeholder='Enter your password' className='border-gray-900 border-2 p-3 focus:outline-blue-300 rounded-xl' type='password' onChange={(e:any)=>setPassword(e.target.value)}></input>
                 
-                <IonButton className='capitalize' onClick={signin}>
+                <IonButton className='capitalize gradient' onClick={signin}>
                     Sign In</IonButton>
                 <h1 className='text-center'>or</h1>
                 <IonButton className='google capitalize ' onClick={signinGoogle}><div className='flex justify-center items-center flex-row gap-4'>

@@ -1,6 +1,6 @@
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import {logoFacebook,camera,man,personCircleOutline, homeOutline,shirtSharp, womanSharp,manSharp, footballSharp, notificationsOutline, bagOutline, chatbubblesOutline } from 'ionicons/icons' 
+import {logoFacebook,camera,man,personCircleOutline, homeOutline,shirtSharp, womanSharp,manSharp, footballSharp, notificationsOutline, bagOutline, chatbubblesOutline, bicycleOutline, person, personOutline} from 'ionicons/icons' 
 import {FaBicycle, FaMotorcycle} from "react-icons/fa"
 import { Route, Redirect } from 'react-router';
 import Home from './Home';
@@ -25,7 +25,9 @@ const Tabs: React.FC = () => {
                 </Route>
                 <Route path={'/app/driver'} component={Driver}></Route>
                 <Route path={'/app/notification'} component={Notification}></Route>
-                <Route path={'/app/chat'} component={Chat}></Route>
+                <Route path="/app/profile">
+          <Profile></Profile>
+        </Route>
                 <Route path="/app/home">
                     <THome></THome>
                 </Route>
@@ -45,7 +47,7 @@ const Tabs: React.FC = () => {
                   
                 </IonTabButton>
                 <IonTabButton tab='driver' href='/app/driver'>
-                   <FaBicycle size={30}/>
+                   <IonIcon icon={bicycleOutline}></IonIcon>
                 </IonTabButton>
                 <IonTabButton tab='pesanan' href='/app/pesanan'>
                     <IonIcon icon={bagOutline}>
@@ -53,8 +55,8 @@ const Tabs: React.FC = () => {
                   
                 </IonTabButton>
                 
-                <IonTabButton tab='chat' href='/app/chat'>
-                    <IonIcon icon={chatbubblesOutline}>
+                <IonTabButton tab='chat' href='/app/profile'>
+                    <IonIcon icon={personOutline}>
                     </IonIcon>
                     
                 </IonTabButton>
