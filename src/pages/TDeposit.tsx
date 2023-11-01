@@ -15,6 +15,7 @@ const Deposit: React.FC = () => {
     const history = useHistory()
     const [result, setResult] = React.useState<any>('');
     const [saldo, setSaldo] = React.useState<any>(0);
+    const [error, setError] = React.useState<any>('');
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -84,6 +85,7 @@ const Deposit: React.FC = () => {
                 })
                 .catch((err)=>{
                   console.log('Firestore update error:', err.message);
+                  setError(err.message);
                 })
                 console.log('payment success', result);
                 setToken('');
@@ -96,10 +98,12 @@ const Deposit: React.FC = () => {
               onError: (err: any) => {
                 console.log('payment error', err);
                 setToken('');
+                setError(err.message);
               },
               onClose: () => {
                 console.log('Anda belum menyelesaikan pembayaran');
                 setToken('');
+                setError('Anda belum menyelesaikan pembayaran');
               },
             }
           );
@@ -131,8 +135,8 @@ const Deposit: React.FC = () => {
                 
                 <div className='p-10'>
                   <h1 className='text-xl font-bold mb-6'>Deposit</h1>
-                
-                
+                 
+                <h1 className='text-red-500'>{error}</h1>
                 <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-3 py-3 focus:outline-none rounded-lg' type="text" placeholder='Masukkan saldo'/>
                 <button onClick={process} className='w-full text-center p-3 bg-blue-900 rounded-xl text-white mt-6'>Process</button>
                 </div>
