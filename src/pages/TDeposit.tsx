@@ -80,7 +80,7 @@ const Deposit: React.FC = () => {
                   saldo: Number(saldo)+Number(result.gross_amount)
                 }, {merge: true})
                 .then((res)=>{
-                  console.log('Firestore update success:', res);
+                  console.log('Firestore update success');
                 })
                 .catch((err)=>{
                   console.log('Firestore update error:', err.message);
@@ -133,7 +133,7 @@ const Deposit: React.FC = () => {
                   <h1 className='text-xl font-bold mb-6'>Deposit</h1>
                 
                 
-                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-2 py-2 focus:outline-none rounded-lg' type="text" placeholder='Masukkan saldo'/>
+                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-3 py-3 focus:outline-none rounded-lg' type="text" placeholder='Masukkan saldo'/>
                 <button onClick={process} className='w-full text-center p-3 bg-blue-900 rounded-xl text-white mt-6'>Process</button>
                 </div>
             </IonContent>

@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
             <div className='bg-gradient-to-b from-blue-900 to-blue-500 text-white p-6 h-full'>
                 {/* <div className='flex flex-col gap-5'> */}
                 <div className='flex-row flex justify-between items-center'>
-                <Link to='/profile-update' className='flex flex-row  gap-6 w-full py-4'>
+                <div className='flex flex-row  gap-6 w-full py-4'>
                     {!user.photoURL ?
                     <div className='rounded-full w-10 text-center py-3 bg-blue-500 text-white'>
                         {user?.displayName && user.displayName.split(" ").map((kata:any)=>kata[0]).join("").toUpperCase().substring(0,2)}
@@ -66,7 +66,7 @@ const Profile: React.FC = () => {
                     <h3 className='font-bold'>{user?.displayName && user.displayName}</h3>
                     <h3>{user?.email && user?.email}</h3>
                     </div>
-                </Link>
+                </div>
                 <button onClick={()=>history.push('/setting')}><BsGear size={25}></BsGear></button>
                 </div>
 
@@ -77,8 +77,8 @@ const Profile: React.FC = () => {
                         <h1 className='text-3xl font-semibold'>Rp{saldo}</h1>
                     </div>
                     <div className='flex flex-row justify-center gap-4 text-gray-800'>
-                        <button onClick={()=>history.push('/deposit')} className='p-2 bg-white rounded-xl w-1/2 flex justify-center items-center gap-1'><GiPayMoney></GiPayMoney><h1>Deposit</h1></button>
-                        <button className='p-2 bg-white rounded-xl w-1/2 flex items-center justify-center gap-1'><GiReceiveMoney></GiReceiveMoney><h1>Tarik Tunai</h1></button>
+                        <button onClick={()=>history.push('/deposit')} className='p-2 py-4 bg-white rounded-xl w-1/2 flex justify-center items-center gap-1'><GiPayMoney></GiPayMoney><h1>Deposit</h1></button>
+                        <button className='p-2 py-4 bg-white rounded-xl w-1/2 flex items-center justify-center gap-1'><GiReceiveMoney></GiReceiveMoney><h1>Tarik Tunai</h1></button>
                     </div>
                     <h1>Riwayat Transaksi</h1>
                     <div className='bg-white p-4 text-gray-800 rounded-2xl text-sm flex flex-col gap-4'>
