@@ -54,6 +54,7 @@ const App = () => {
       </Route>
       <Route exact path={'/deposit'}>
       <Deposit></Deposit>
+      
       </Route>
         <Route exact path="/profile">
           <Profile></Profile>
