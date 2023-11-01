@@ -7,13 +7,14 @@ import Home from './Home';
 import Profile from './TProfile';
 import Categories from './Categories';
 import Notification from './Notification';
-import Pesanan from './Pesanan'
+import Pesanan from './TPesanan'
 
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import Chat from './Chat';
 import THome from './THome';
 import Driver from './TDriver';
+import TabsPesanan from './TabsPesanan';
 
 const Tabs: React.FC = () => {
 
@@ -21,7 +22,7 @@ const Tabs: React.FC = () => {
         <IonTabs>
             <IonRouterOutlet>
                 <Route path='/app/pesanan'>
-                    <Pesanan></Pesanan>
+                    <TabsPesanan/>
                 </Route>
                 <Route path={'/app/driver'} component={Driver}></Route>
                 <Route path={'/app/notification'} component={Notification}></Route>
@@ -35,7 +36,7 @@ const Tabs: React.FC = () => {
                     <Redirect to='/app/home'></Redirect>
                 </Route>
             </IonRouterOutlet>
-            <IonTabBar color={'white'} slot='bottom' style={{paddingLeft:'20px',paddingRight:'20px', paddingTop:'10px', paddingBottom:'10px'}} className='border-t-4 border-solid border-gray-200'>
+            <IonTabBar color={'light'} slot='bottom' style={{paddingLeft:'20px',paddingRight:'20px', paddingTop:'10px', paddingBottom:'10px'}} className='border-t-4 border-solid border-gray-200'>
                 <IonTabButton tab='home' href='/app/home'>
                     <IonIcon icon={homeOutline}>
                     </IonIcon>

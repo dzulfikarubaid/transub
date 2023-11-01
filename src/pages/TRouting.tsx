@@ -21,6 +21,12 @@ import L from "leaflet";
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
+const customIcon = new L.Icon({
+  iconUrl: 'loc.png',
+  iconSize: [32, 32], // ukuran marker
+  iconAnchor: [16, 32], // titik ancor di bagian bawah marker
+  popupAnchor: [0, -32], // titik ancor popup
+});
 const createRoutineMachineLayer = (props:any) => {
     const { x1, y1, x2, y2 }:any = props
     const [waktu, setWaktu] = React.useState(0);
@@ -34,12 +40,11 @@ const createRoutineMachineLayer = (props:any) => {
     lineOptions: {
       styles: [{ color: "#6FA1EC", weight: 4 }]
     },
-    
     show: false,
     addWaypoints: false,
     fitSelectedRoutes: true,
     showAlternatives: false,
-    draggableWaypoints: false
+    draggableWaypoints: false,
   });
   instance.on('routesfound', function(e:any) {
     var routes = e.routes;
@@ -89,7 +94,7 @@ const Routing: React.FC = (props:any) => {
     scrollWheelZoom={false}
     touchZoom={false}
     doubleClickZoom={true}
-    
+  
     >
     <TileLayer
 
@@ -98,7 +103,16 @@ const Routing: React.FC = (props:any) => {
 
     />
     <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
-
+    {/* <Marker position={[x1, y1]} icon={customIcon}>
+        <Popup>
+          Marker Custom untuk Lokasi 1
+        </Popup>
+      </Marker>
+      <Marker position={[x2, y2]} icon={customIcon}>
+        <Popup>
+          Marker Custom untuk Lokasi 2
+        </Popup>
+      </Marker> */}
     
     
     

@@ -37,6 +37,8 @@ import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import WhatsApp from './pages/TWa';
+import Deposit from './pages/TDeposit';
+import Setting from './pages/TSetting';
 setupIonicReact();
 
 const App = () => {
@@ -50,6 +52,9 @@ const App = () => {
       <Route exact path={'/antar'}>
       <Antar></Antar>
       </Route>
+      <Route exact path={'/deposit'}>
+      <Deposit></Deposit>
+      </Route>
         <Route exact path="/profile">
           <Profile></Profile>
         </Route>
@@ -58,6 +63,9 @@ const App = () => {
         </Route>
         <Route exact path="/signin">
           <SignIn/>
+        </Route>
+        <Route exact path="/setting">
+          <Setting></Setting>
         </Route>
         <Route exact path="/signup">
           <SignUp/>

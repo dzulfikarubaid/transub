@@ -72,7 +72,7 @@ const SignUp: React.FC = () => {
           <IonTitle>Sign Up</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent scrollY={false}>
+      <IonContent >
         <div className='ion-padding'>
           <h1 className='text-red-500 text-center'>{error}</h1>
           <form

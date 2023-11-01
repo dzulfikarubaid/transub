@@ -31,46 +31,52 @@ interface AvailableData {
 }
 
 const THome: React.FC = () => {
-    const [titikAntar, setTitikAntar] = useState<any>('')
-    const [titikJemput, setTitikJemput] = useState<any>('')
-    const [valueLatAntar, setValueLat] = useState<any>('')
-    const [valuelngAntar, setValuelng] = useState<any>('')
-    const history = useHistory();
-    const [valueLatjemput, setValueLatjemput] = useState<any>('')
-    const [valuelngjemput, setValuelngjemput] = useState<any>('')
-    const [user, setUser] = React.useState<any>('');
-    const [result, setResult] = React.useState<any>('');
-    const [price, setPrice] = React.useState<any>('');
-    const [waktu, setWaktu] = React.useState<any>('');
-    
-    const getWa = async () => {
-        try {
-          if(user){
-            const querySnapshot = await getDoc(doc(db, 'users', user.uid))
-            if(querySnapshot.exists()){
-              if(querySnapshot.data().wa){
-                Preferences.set({ key: 'wa', value: querySnapshot.data().wa })
-                console.log(querySnapshot.data().wa)
-              }
-            };
-            
-          }
-          
-        } catch (error) {
-          console.error('Error getting documents: ', error);
-        }
-      };
-      getWa();
-    const [authenticated, setAuthenticated] = React.useState(false);
-    function InputAntar(){
-        history.push('/antar')
-    }
-    function InputJemput(){
-        history.push('/jemput')
-    }
-    
+  const [titikAntar, setTitikAntar] = useState<any>('');
+  const [titikJemput, setTitikJemput] = useState<any>('');
+  const [valueLatAntar, setValueLat] = useState<any>('');
+  const [valuelngAntar, setValuelng] = useState<any>('');
+  const history = useHistory();
+  const [valueLatjemput, setValueLatjemput] = useState<any>('');
+  const [valuelngjemput, setValuelngjemput] = useState<any>('');
+  const [user, setUser] = useState<any>('');
+  const [result, setResult] = useState<any>('');
+  const [price, setPrice] = useState<any>('');
+  const [waktu, setWaktu] = useState<any>('');
+  const [Wa, setWa] = useState<any>('');
+  
 
-    const fetchAntar = async () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // console.log(user);
+        setUser(user);
+    } else {
+        history.push('/signin');
+    }
+});
+  const getWa = async () => {
+    try {
+      if (user) {
+        const querySnapshot = await getDoc(doc(db, 'users', user.uid));
+        if (querySnapshot.exists()) {
+          if (querySnapshot.data().wa) {
+            Preferences.set({ key: 'wa', value: querySnapshot.data().wa });
+            console.log(querySnapshot.data().wa);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error getting documents: ', error);
+    }
+  };
+  function InputAntar(){
+    history.push('/antar')
+}
+function InputJemput(){
+    history.push('/jemput')
+}
+
+
+  const fetchAntar = async () => {
     try {
       const [latAntar, lngAntar, titikantar] = await Promise.all([
         Preferences.get({ key: 'latantar' }),
@@ -81,15 +87,14 @@ const THome: React.FC = () => {
       setValueLat(latAntar.value);
       setValuelng(lngAntar.value);
       setTitikAntar(titikantar.value);
-
     } catch (error) {
       console.error('Error fetching preferences:', error);
     }
   };
+
   const fetchJemput = async () => {
     try {
       const [latjemput, lngjemput, titikjemput] = await Promise.all([
-
         Preferences.get({ key: 'latjemput' }),
         Preferences.get({ key: 'lngjemput' }),
         Preferences.get({ key: 'titikjemput' }),
@@ -100,78 +105,28 @@ const THome: React.FC = () => {
     } catch (error) {
       console.error('Error fetching preferences:', error);
     }
-  }
-  const [Wa, setWa] = React.useState<any>('');
+  };
+
   const fetchSummary = async () => {
-      try{
-        const [distance, time, price, wa] = await Promise.all([
-            Preferences.get({ key: 'distance' }),
-            Preferences.get({ key: 'waktu' }),
-            Preferences.get({ key: 'price' }),
-            Preferences.get({ key: 'wa' }),
-          ]);
-          setResult(distance.value);
-          setWaktu(time.value);
-          setPrice(price.value);
-          setWa(wa.value);
-          
-      }
-      catch(error){
-          console.error('Error fetching preferences:', error);
-      }
-  }
-
-  
-useEffect(() => {
-    setInterval(() => {
-        fetchAntar();
-        fetchJemput();
-       
-    },500)
-},[]);
-  
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // console.log(user);
-            setUser(user);
-        } else {
-            history.push('/signin');
-        }
-    });
-
-    const [data, setData] = React.useState<AvailableData[]>([]);
-
-    useEffect(() => {
-        getDocs(collection(db, 'available')).then((res) => {
-            setData(res.docs as AvailableData[]);
-        });
-    }, []);
-
-    const requestRide = async (ownerUid: string) => {
-        // Mendapatkan token perangkat pemilik postingan
-        const ownerDocRef = doc(db, 'users', ownerUid);
-        const ownerDoc = (await getDoc(ownerDocRef)) as DocumentSnapshot;
-        const ownerToken = ownerDoc.data()?.fcmToken;
-
-        // Kirim notifikasi ke pemilik postingan
-        const message = {
-            data: {
-                title: 'Permintaan Antar',
-                body: 'Ada pengguna yang meminta antaran Anda.',
-            },
-            token: ownerToken,
-        };
-
-        // Kirim notifikasi menggunakan Firebase Cloud Messaging
-        try {
-            const response = await messaging.send(message);
-            console.log('Notifikasi terkirim:', response);
-        } catch (error) {
-            console.error('Gagal mengirim notifikasi:', error);
-        }
-    };
-    const datetime = moment().format()
+    try {
+      const [distance, time, price, wa] = await Promise.all([
+        Preferences.get({ key: 'distance' }),
+        Preferences.get({ key: 'waktu' }),
+        Preferences.get({ key: 'price' }),
+        Preferences.get({ key: 'wa' }),
+      ]);
+      setResult(distance.value);
+      setWaktu(time.value);
+      setPrice(price.value);
+      setWa(wa.value);
+    } catch (error) {
+      console.error('Error fetching preferences:', error);
+    }
+  };
+  const datetime = moment().format()
     async function postFirestore(){
+      console.log("User UID:", user.uid);
+      console.log("Datetime:", datetime);
         await setDoc(doc(db, "order", `${user.uid}#${datetime}`), {
             uid: user.uid,
             name: user.displayName,
@@ -191,36 +146,51 @@ useEffect(() => {
             distance: result,
             waktu: waktu,
             price: price,
-            wa: Wa
+            wa: Wa,
+            status: "ready"
           });
+          history.push('/app/pesanan')
     }
-    const RoutingMap = () => {
-        return (
-          <Routing
-            x1={valueLatAntar}
-            y1={valuelngAntar}
-            x2={valueLatjemput}
-            y2={valuelngjemput}
-          />
-        );
-      };
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-          // Panggil RoutingMap dan render di dalam komponen ini
-          
-    
-          // Render RoutingMap di dalam komponen (gunakan state atau lainnya)
-          // Misalnya, Anda bisa menggunakan state untuk menyimpan komponen yang akan dirender
-          RoutingMap()
-          fetchSummary();
-        }, 100);
-    
-        // Membersihkan interval saat komponen tidak lagi digunakan atau di-unmount
-        return () => clearInterval(intervalId);
-      }, [valueLatAntar, valuelngAntar, valueLatjemput, valuelngjemput]);
-    
-      const [renderedComponent, setRenderedComponent] = useState(<></>);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchAntar();
+      fetchJemput();
+      fetchSummary();
+    }, 500);
 
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    getWa();
+  }, [user]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchSummary();
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, [valueLatAntar, valuelngAntar, valueLatjemput, valuelngjemput]);
+  const RoutingMap = () => {
+    return (
+      <Routing
+        x1={valueLatAntar}
+        y1={valuelngAntar}
+        x2={valueLatjemput}
+        y2={valuelngjemput}
+      />
+    );
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      RoutingMap();
+      fetchSummary();
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, [valueLatAntar, valuelngAntar, valueLatjemput, valuelngjemput]);
 
     return (
         <IonPage>
