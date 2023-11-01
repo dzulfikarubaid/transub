@@ -69,6 +69,7 @@ const Driver: React.FC = () => {
     setDoc(orderRef, { status: 'diantar', driver: user.uid}, { merge: true })
       .then(() => {
         console.log('Status berhasil diubah menjadi "diantar"');
+        history.push('/app/pesanan/antar');
       })
       .catch((error) => {
         console.error('Gagal mengubah status:', error);

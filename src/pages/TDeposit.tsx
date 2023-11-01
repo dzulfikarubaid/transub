@@ -71,17 +71,15 @@ const Deposit: React.FC = () => {
             {
               onSuccess: (result: any) => {
                 setResult(result.gross_amount);
-                console.log('payment success', result);
-                console.log('user.uid:', user.uid);
-                console.log('result.gross_amount:', result.gross_amount);
-                console.log('saldo:', saldo);
-                console.log('new saldo:', Number(saldo)+Number(result.gross_amount))
+               
                 localStorage.setItem('payment', JSON.stringify(result));
                 setDoc(doc(db, 'users', user.uid), {
                   saldo: Number(saldo)+Number(result.gross_amount)
                 }, {merge: true})
                 .then((res)=>{
+                  
                   console.log('Firestore update success');
+                  history.push('/app/profile');
                 })
                 .catch((err)=>{
                   console.log('Firestore update error:', err.message);
@@ -98,7 +96,7 @@ const Deposit: React.FC = () => {
               onError: (err: any) => {
                 console.log('payment error', err);
                 setToken('');
-                setError(err.message);
+                setError(err);
               },
               onClose: () => {
                 console.log('Anda belum menyelesaikan pembayaran');
