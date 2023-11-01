@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   
   appId: 'io.ionic.starter',
   appName: 'Transub.id',
-  webDir: 'dist',
+  webDir: 'build',
   server: {
     androidScheme: 'https'
   }
