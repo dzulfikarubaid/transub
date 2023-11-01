@@ -18,7 +18,7 @@ const Deposit: React.FC = () => {
                 'Content-Type': 'application/json'
             }
         }
-        const response = await axios.post('http://localhost:1000/api/payment/process-transaction', data, config)
+        const response = await axios.post('https://transub-payment-gateway.vercel.app/api/payment/process-transaction', data, config)
         console.log(response.data.token)
         setToken(response.data.token)
     }
