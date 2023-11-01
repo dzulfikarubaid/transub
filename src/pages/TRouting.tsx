@@ -5,11 +5,11 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { MapContainer, Marker, Popup, useMapEvents, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import './TRouting.css'
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {Icon} from 'leaflet'
 import './TLeafletlogo.css'
-import {
-  useIonViewDidEnter,
+import { useIonViewDidEnter,} from '@ionic/react';
 
-} from '@ionic/react';
 import '../theme/variables.css'
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
@@ -120,16 +120,16 @@ const Routing: React.FC<RoutingProps> = (props) => {
 
     />
     <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
-    {/* <Marker position={[x1, y1]} icon={customIcon}>
+    <Marker position={[x1, y1]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41],})} >
         <Popup>
           Marker Custom untuk Lokasi 1
         </Popup>
       </Marker>
-      <Marker position={[x2, y2]} icon={customIcon}>
+      <Marker position={[x2, y2]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41],})} >
         <Popup>
           Marker Custom untuk Lokasi 2
         </Popup>
-      </Marker> */}
+      </Marker>
     
     
     
