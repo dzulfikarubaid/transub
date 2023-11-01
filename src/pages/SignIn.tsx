@@ -76,11 +76,11 @@ function SignIn() {
                 
                 <IonButton className='capitalize gradient' onClick={signin}>
                     Sign In</IonButton>
-                <h1 className='text-center'>or</h1>
-                <IonButton className='google capitalize ' onClick={signinGoogle}><div className='flex justify-center items-center flex-row gap-4'>
+                {/* <h1 className='text-center'>or</h1> */}
+                {/* <IonButton className='google capitalize ' onClick={signinGoogle}><div className='flex justify-center items-center flex-row gap-4'>
                 <FcGoogle size={25}></FcGoogle>
                     <h1>Continue with Google</h1>
-                    </div></IonButton>
+                    </div></IonButton> */}
                 </form>
                 <div style={{display:'flex', justifyContent:'center', flexDirection:'column', textAlign:'center'}} className='mt-6'>
                     

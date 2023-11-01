@@ -90,13 +90,13 @@ const SignUp: React.FC = () => {
             <IonButton className='capitalize gradient' onClick={signup}>
               Sign Up
             </IonButton>
-            <h1 className='text-center'>or</h1>
-            <IonButton className='capitalize google' onClick={signupGoogle}>
+            {/* <h1 className='text-center'>or</h1> */}
+            {/* <IonButton className='capitalize google' onClick={signupGoogle}>
               <div className='flex flex-row gap-4 justify-center items-center'>
                 <FcGoogle size={25}></FcGoogle>
                 <h1>Sign Up with Google</h1>
               </div>
-            </IonButton>
+            </IonButton> */}
           </form>
           <div
             style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}

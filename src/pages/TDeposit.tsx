@@ -2,16 +2,67 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import React, { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
+import { auth, db } from '../firebaseConfig';
+import { useHistory } from 'react-router';
+import moment from 'moment';
+import { addDoc, collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 const Deposit: React.FC = () => {
     const [email, setEmail] = React.useState('');
     const [order_id, setOrder_id] = React.useState('');
-    const [total, setTotal] = React.useState(0);
+    const [total, setTotal] = React.useState<any>('');
     const [token, setToken] = React.useState('');
+    const [user, setUser] = React.useState<any>(null);
+    const history = useHistory()
+    const [result, setResult] = React.useState<any>('');
+    const [saldo, setSaldo] = React.useState<any>(0);
+    const [success, setSuccess] = React.useState(false);
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+          
+    
+          const orderCollection = collection(db, 'users');
+    
+          // Menggunakan query untuk mendapatkan data dengan nama (displayName) yang sama
+          // dan hanya dengan status 'ready'
+          const q = query(orderCollection, 
+            where('email', '==', user.email)
+          );
+    
+          const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
+            const ordersData = querySnapshot.docs.map((doc:any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setSaldo(ordersData[0].saldo);
+          });
+          if(success){
+            setDoc(doc(db, 'users', user.uid), {
+              saldo: Number(saldo)+Number(result),
+            }, {merge: true})
+            .then((res)=>{
+              console.log('Firestore update success:', res);
+            })
+            .catch((err)=>{
+              console.log('Firestore update error:', err.message);
+            })
+          }
+    
+          return () => snapshotUnsubscribe();
+        } else {
+          history.push('/signin');
+        }
+      });
+    
+      return () => unsubscribe();
+    }, [history]);
+  
     const process = async () =>{
         const data = {
-            email: email,
-            order_id: order_id,
-            total: total
+            email: user.email,
+            order_id: user.displayName+"-"+moment().format('YYYYMMDDHHmmss'),
+            total: parseFloat(total)
         }
         const config = {
             headers: {
@@ -31,7 +82,10 @@ const Deposit: React.FC = () => {
             token,
             {
               onSuccess: (result: any) => {
+                setResult(result.gross_amount);
                 localStorage.setItem('payment', JSON.stringify(result));
+                setSuccess(true)
+                
                 console.log('payment success', result);
                 setToken('');
               },
@@ -52,8 +106,7 @@ const Deposit: React.FC = () => {
           );
       
           // Reset state setelah melakukan pembayaran
-          setEmail('');
-          setOrder_id('');
+         
           setTotal(0);
         }
       }, [token]);
@@ -76,13 +129,14 @@ const Deposit: React.FC = () => {
         <IonPage>
             
             <IonContent >
-                <label htmlFor="">Nama</label>
-                <input value={email} onChange={e => setEmail(e.target.value)} className='bg-slate-200 w-full px-2 py-2 focus:outline-none rounded-lg' type="text" placeholder='masukkan nama'/>
-                <label htmlFor="">Order ID</label>
-                <input value={order_id} onChange={e => setOrder_id(e.target.value)} className='bg-slate-200 w-full px-2 py-2 focus:outline-none rounded-lg' type="text" placeholder='masukkan order id'/>
-                <label htmlFor="">Total</label>
-                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-2 py-2 focus:outline-none rounded-lg' type="text" placeholder='masukkan total'/>
-                <button onClick={process}>Process</button>
+                
+                <div className='p-10'>
+                  <h1 className='text-xl font-bold mb-6'>Deposit</h1>
+                
+                
+                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-2 py-2 focus:outline-none rounded-lg' type="text" placeholder='Masukkan saldo'/>
+                <button onClick={process} className='w-full text-center p-3 bg-blue-900 rounded-xl text-white mt-6'>Process</button>
+                </div>
             </IonContent>
         </IonPage>
     );

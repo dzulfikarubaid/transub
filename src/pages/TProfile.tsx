@@ -1,13 +1,14 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonItemGroup, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { bookOutline, createOutline, logOutOutline } from 'ionicons/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { BiMoneyWithdraw } from 'react-icons/bi';
 import { FaMoneyBillAlt, FaToolbox } from 'react-icons/fa';
 import { GiPayMoney, GiReceiveMoney } from 'react-icons/gi';
 import {BsGear} from 'react-icons/bs'
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 const Profile: React.FC = () => {
     const history = useHistory()
     const [user, setUser] = useState<any>('')
@@ -15,9 +16,37 @@ const Profile: React.FC = () => {
         signOut(auth)
         history.push('/signin')
     }
-    onAuthStateChanged(auth, (user) => {
-        setUser(user)
-    })
+  const [saldo, setSaldo] = useState<any>(0);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+  
+        const orderCollection = collection(db, 'users');
+  
+        // Menggunakan query untuk mendapatkan data dengan nama (displayName) yang sama
+        // dan hanya dengan status 'ready'
+        const q = query(orderCollection, 
+          where('email', '==', user.email)
+        );
+  
+        const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
+          const ordersData = querySnapshot.docs.map((doc:any) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setSaldo(ordersData[0].saldo);
+        });
+  
+        return () => snapshotUnsubscribe();
+      } else {
+        history.push('/signin');
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [history]);
+
     const [isOpen, setIsOpen] = useState(false)
     return (
         <IonPage>
@@ -45,7 +74,7 @@ const Profile: React.FC = () => {
                 <div className='flex flex-col gap-4 justify-center'>
                     <div className='rounded-2xl bg-white text-gray-800 p-4 flex flex-col gap-4'>
                         <h1>Main Balance</h1>
-                        <h1 className='text-3xl font-semibold'>Rp200000</h1>
+                        <h1 className='text-3xl font-semibold'>Rp{saldo}</h1>
                     </div>
                     <div className='flex flex-row justify-center gap-4 text-gray-800'>
                         <button onClick={()=>history.push('/deposit')} className='p-2 bg-white rounded-xl w-1/2 flex justify-center items-center gap-1'><GiPayMoney></GiPayMoney><h1>Deposit</h1></button>

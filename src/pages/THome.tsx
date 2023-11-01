@@ -84,8 +84,13 @@ function InputJemput(){
         Preferences.get({ key: 'titikantar' }),
       ]);
 
-      setValueLat(latAntar.value);
-      setValuelng(lngAntar.value);
+      if (latAntar.value !== null && lngAntar.value !== null) {
+        setValueLat(latAntar.value);
+        setValuelng(lngAntar.value);
+      } else {
+        // Handle the case where latAntar.value or lngAntar.value is null
+        console.error('latAntar or lngAntar is null');
+      }
       setTitikAntar(titikantar.value);
     } catch (error) {
       console.error('Error fetching preferences:', error);

@@ -30,7 +30,8 @@ const WhatsApp: React.FC = () => {
             name: user.displayName,
             email: user.email,
             photoURL: user.photoURL || '',
-            wa: waNumber
+            wa: waNumber,
+            saldo: 0
           }).then(
             (res) =>{
                 history.push('/app')

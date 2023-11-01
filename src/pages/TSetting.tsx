@@ -4,20 +4,42 @@ import { logOutOutline } from 'ionicons/icons';
 import { BiArrowBack } from 'react-icons/bi';
 import { Link, useHistory } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 
 const Setting: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = useState<any>('');
-
+  const [saldo, setSaldo] = useState<any>(0);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+      if (user) {
+        setUser(user);
+  
+        const orderCollection = collection(db, 'users');
+  
+        // Menggunakan query untuk mendapatkan data dengan nama (displayName) yang sama
+        // dan hanya dengan status 'ready'
+        const q = query(orderCollection, 
+          where('email', '==', user.email)
+        );
+  
+        const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
+          const ordersData = querySnapshot.docs.map((doc:any) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setSaldo(ordersData[0].saldo);
+        });
+  
+        return () => snapshotUnsubscribe();
+      } else {
+        history.push('/signin');
+      }
     });
-
-    // Clean up the listener when the component unmounts
+  
     return () => unsubscribe();
-  }, []);
+  }, [history]);
 
   const handleSignOut = async () => {
     try {
