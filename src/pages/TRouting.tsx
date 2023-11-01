@@ -120,10 +120,10 @@ const Routing: React.FC<RoutingProps> = (props) => {
 
     />
     <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
-    <Marker position={[x1, y1]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41],})} >
+    <Marker position={[x1, y1]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41],})} >
       
       </Marker>
-      <Marker position={[x2, y2]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41],})} >
+      <Marker position={[x2, y2]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41],})} >
 
       </Marker>
     
