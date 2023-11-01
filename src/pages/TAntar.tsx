@@ -22,40 +22,45 @@ const Antar: React.FC = () => {
       lat: '',lng:''
     })
   const history = useHistory();
-  function geoLocation(){
-    const [location, setLocation] = useState({
-    loaded: false,
-    coordinates: {lat:'', lng:''}
-  })
-  const onSuccess = (location:any)=> {
-    setLocation({
-      loaded:true,
-      coordinates:{
-        lat:location.coords.latitude,
-        lng: location.coords.longitude,
+  function geoLocation() {
+    const [location, setLocation] = useState<{
+      loaded: boolean;
+      coordinates?: { lat: string; lng: string };
+      Error?: any;
+    }>({
+      loaded: false,
+    });
+  
+    const onSuccess = (location: any) => {
+      setLocation({
+        loaded: true,
+        coordinates: {
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
+        },
+      });
+    };
+  
+    const onError = (Error: any) => {
+      setLocation({
+        loaded: true,
+        Error,
+      });
+    };
+  
+    useEffect(() => {
+      if (!("geolocation" in navigator)) {
+        onError({
+          code: 0,
+          message: "Geolocation not supported",
+        });
       }
-    }) 
+      navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    }, []);
+  
+    return location;
   }
-  const onError = (Error:any) =>{
-    setLocation(
-      {
-        loaded:true,
-        Error
-      }
-    )
-
-  }
-  useEffect(()=>{
-    if(!("geolocation" in navigator)){
-      onError({
-        code:0,
-        message:"Geolocation not supported"
-      })
-    }
-    navigator.geolocation.getCurrentPosition(onSuccess, onError)
-  },[])
-  return location
-  }
+  
 
   const [titikAntar, setTitikAntar] = useState<any>('')
 

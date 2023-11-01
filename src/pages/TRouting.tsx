@@ -11,15 +11,24 @@ import {
 
 } from '@ionic/react';
 import '../theme/variables.css'
+import * as L from 'leaflet';
+import 'leaflet-routing-machine';
 
 import {BiCurrentLocation,  BiPlusCircle} from 'react-icons/bi'
 import { FaSearchLocation } from 'react-icons/fa';
 import { Preferences } from '@capacitor/preferences'
 import { useHistory } from 'react-router'
 import axios from 'axios'
-import L from "leaflet";
+
 import { createControlComponent } from "@react-leaflet/core";
-import "leaflet-routing-machine";
+
+
+interface RoutingProps {
+  x1: any;
+  y1: any;
+  x2: any;
+  y2: any;
+}
 
 const customIcon = new L.Icon({
   iconUrl: 'loc.png',
@@ -38,13 +47,21 @@ const createRoutineMachineLayer = (props:any) => {
       L.latLng(x2, y2)
     ],
     lineOptions: {
-      styles: [{ color: "#6FA1EC", weight: 4 }]
+      extendToWaypoints: true, // Add this property
+    missingRouteTolerance: 5,
+      styles: [
+        {
+          color: 'red',
+          opacity: 0.6,
+          weight: 4
+        }
+      ]
     },
     show: false,
     addWaypoints: false,
     fitSelectedRoutes: true,
     showAlternatives: false,
-    draggableWaypoints: false,
+    
   });
   instance.on('routesfound', function(e:any) {
     var routes = e.routes;
@@ -80,8 +97,8 @@ const createRoutineMachineLayer = (props:any) => {
 const RoutingMachine = createControlComponent(createRoutineMachineLayer);
 
 
-const Routing: React.FC = (props:any) => {
-    const { x1, y1, x2, y2 }:any = props
+const Routing: React.FC<RoutingProps> = (props) => {
+    const { x1, y1, x2, y2 } = props
   
  
   return (

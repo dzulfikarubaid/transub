@@ -23,34 +23,41 @@ const Deposit: React.FC = () => {
         setToken(response.data.token)
     }
     useEffect(() => {
-      if(token){
-        window.snap.pay(
-            token,{
-                onSuccess: (result:any) => {
-                    localStorage.setItem('payment', JSON.stringify(result))
-                    
-                    console.log('payment success', result);
-                    setToken('')
-                },
-                onPending: (result:any) => {
-                    console.log('payment pending', result);
-                    localStorage.setItem('payment', JSON.stringify(result))
-                    setToken('')
-                },
-                onError: (err:any) => {
-                    console.log('payment error', err);
-                    setToken('')
-                },
-                onClose: () => {
-                    console.log('Anda belum menyelesaikan pembayaran');
-                    setToken('')
-                }
-            })
-            setEmail('')
-            setOrder_id('')
-            setTotal(0)
-      }
-    }, [token])
+        if (token && 'snap' in window) {
+          // Tipekan window.snap sesuai dengan kebutuhan Anda
+          const snap: any = window.snap;
+      
+          snap.pay(
+            token,
+            {
+              onSuccess: (result: any) => {
+                localStorage.setItem('payment', JSON.stringify(result));
+                console.log('payment success', result);
+                setToken('');
+              },
+              onPending: (result: any) => {
+                console.log('payment pending', result);
+                localStorage.setItem('payment', JSON.stringify(result));
+                setToken('');
+              },
+              onError: (err: any) => {
+                console.log('payment error', err);
+                setToken('');
+              },
+              onClose: () => {
+                console.log('Anda belum menyelesaikan pembayaran');
+                setToken('');
+              },
+            }
+          );
+      
+          // Reset state setelah melakukan pembayaran
+          setEmail('');
+          setOrder_id('');
+          setTotal(0);
+        }
+      }, [token]);
+      
 
     useEffect(() => {
         const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
