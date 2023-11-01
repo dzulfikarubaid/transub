@@ -15,12 +15,10 @@ const Deposit: React.FC = () => {
     const history = useHistory()
     const [result, setResult] = React.useState<any>('');
     const [saldo, setSaldo] = React.useState<any>(0);
-    const [success, setSuccess] = React.useState(false);
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
           setUser(user);
-          
     
           const orderCollection = collection(db, 'users');
     
@@ -37,17 +35,6 @@ const Deposit: React.FC = () => {
             }));
             setSaldo(ordersData[0].saldo);
           });
-          if(success){
-            setDoc(doc(db, 'users', user.uid), {
-              saldo: Number(saldo)+Number(result),
-            }, {merge: true})
-            .then((res)=>{
-              console.log('Firestore update success:', res);
-            })
-            .catch((err)=>{
-              console.log('Firestore update error:', err.message);
-            })
-          }
     
           return () => snapshotUnsubscribe();
         } else {
@@ -83,9 +70,21 @@ const Deposit: React.FC = () => {
             {
               onSuccess: (result: any) => {
                 setResult(result.gross_amount);
+                console.log('payment success', result);
+                console.log('user.uid:', user.uid);
+                console.log('result.gross_amount:', result.gross_amount);
+                console.log('saldo:', saldo);
+                console.log('new saldo:', Number(saldo)+Number(result.gross_amount))
                 localStorage.setItem('payment', JSON.stringify(result));
-                setSuccess(true)
-                
+                setDoc(doc(db, 'users', user.uid), {
+                  saldo: Number(saldo)+Number(result.gross_amount)
+                }, {merge: true})
+                .then((res)=>{
+                  console.log('Firestore update success:', res);
+                })
+                .catch((err)=>{
+                  console.log('Firestore update error:', err.message);
+                })
                 console.log('payment success', result);
                 setToken('');
               },
