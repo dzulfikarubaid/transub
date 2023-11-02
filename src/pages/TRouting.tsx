@@ -51,7 +51,7 @@ const createRoutineMachineLayer = (props:any) => {
     missingRouteTolerance: 5,
       styles: [
         {
-          color: 'blue',
+          color: '#3A9BDC',
           opacity: 0.5,
           weight: 4
         }
