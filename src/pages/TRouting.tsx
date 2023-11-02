@@ -116,10 +116,10 @@ const Routing: React.FC<RoutingProps> = (props) => {
     <TileLayer
 
       // url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
-  //     url = "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-  //  subdomains= {['mt0','mt1','mt2','mt3']}
+      url = "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+   subdomains= {['mt0','mt1','mt2','mt3']}
    maxZoom={20}
-  url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
+  // url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
 //   url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
 //   maxZoom={22}
 // subdomains={'abcd'}
