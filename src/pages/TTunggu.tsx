@@ -7,53 +7,87 @@ import { auth, db } from '../firebaseConfig';
 import { useHistory } from 'react-router';
 import { BiInfoCircle, BiLogoWhatsapp, BiMoney, BiTimer, BiWind } from 'react-icons/bi';
 import { FaTrashAlt } from 'react-icons/fa';
+import moment from 'moment';
 const Tunggu: React.FC = () => {
     const [user, setUser] = useState<any>(null)
     const [orders, setOrders] =useState<any>(null)
     const history = useHistory() 
+    const datetime = moment().format('YYYYMMDDHHmmss')
+    const [saldo, setSaldo] = useState<any>(0);
+    const [success1, setSuccess1] = useState(false);
+    const [success2, setSuccess2] = useState(false);
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          if (user) {
-            setUser(user);
-      
-            const orderCollection = collection(db, 'order');
-      
-            // Menggunakan query untuk mendapatkan data dengan nama (displayName) yang sama
-            // dan hanya dengan status 'ready'
-            const q = query(orderCollection, 
-              where('name', '==', user.displayName), 
-              where('status', '==', 'ready')
-            );
-      
-            const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
-              const ordersData = querySnapshot.docs.map((doc:any) => ({
-                id: doc.id,
-                ...doc.data(),
-              }));
-              setOrders(ordersData);
-            });
-      
-            return () => snapshotUnsubscribe();
-          } else {
-            history.push('/signin');
-          }
-        });
-      
-        return () => unsubscribe();
-      }, [history]);
-      console.log(orders)
-      function Batal({orderId}:any){
-        const orderRef = doc(db, 'order', orderId);
-
-    // Menggunakan setDoc untuk mengubah status menjadi "diantar"
-    setDoc(orderRef, { status: 'dibatalkan'}, { merge: true })
-      .then(() => {
-        console.log('Status berhasil diubah menjadi "dibatalkan"');
-      })
-      .catch((error) => {
-        console.error('Gagal mengubah status:', error);
+      const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+    
+          // Get user saldo
+          const userCollection = collection(db, 'users');
+          const userQuery = query(userCollection, where('email', '==', user.email));
+          const userSnapshotUnsubscribe = onSnapshot(userQuery, (userQuerySnapshot:any) => {
+            const userData = userQuerySnapshot.docs.map((doc:any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setSaldo(userData[0].saldo);
+          });
+    
+          // Get user orders with status 'ready'
+          const orderCollection = collection(db, 'order');
+          const orderQuery = query(orderCollection, 
+            where('name', '==', user.displayName), 
+            where('status', '==', 'ready')
+          );
+          const orderSnapshotUnsubscribe = onSnapshot(orderQuery, (orderQuerySnapshot:any) => {
+            const ordersData = orderQuerySnapshot.docs.map((doc:any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setOrders(ordersData);
+          });
+    
+          return () => {
+            userSnapshotUnsubscribe();
+            orderSnapshotUnsubscribe();
+          };
+        } else {
+          history.push('/signin');
+        }
       });
-  
+    
+      return () => unsubscribeAuth();
+    }, [history]);
+      
+      console.log(orders)
+      async function Batal({orderId, price, titikJemput, titikAntar}:any){
+        const orderRef = doc(db, 'order', orderId);
+        
+        
+        await setDoc(doc(db, "payment", `${user.uid}#${datetime}`), {
+          uid: user.uid,
+          saldo: '+Rp'+price,
+          create_at: datetime,
+          titikjemput: titikJemput,
+          titikantar: titikAntar,
+          status:"pembatalan"
+        }, { merge: true })
+        .then(() => {
+          setDoc(doc(db, "users", user.uid), {
+            saldo: Number(saldo) + Number(price)
+          }, { merge: true }).then(() => {
+
+          })
+        })
+        .then(() => {
+          setDoc(orderRef, { status: 'dibatalkan'}, { merge: true })
+        .then(() => {
+          console.log('Status berhasil diubah menjadi "dibatalkan"');
+          history.push('/app/pesanan/batal');
+        })
+        .catch((error) => {
+          console.error('Gagal mengubah status:', error);
+        });
+        })
       }
     return (
         <IonPage>
@@ -61,7 +95,7 @@ const Tunggu: React.FC = () => {
             <IonContent >
                <div className='w-full flex flex-col gap-6 p-10'>
                {
-                orders !== null ? 
+                orders !== null && orders.length > 0 ? 
                 orders.map((order: any) => (
                     <div key={order.id} className='p-4 bg-gray-100 rounded-xl'>
                       <div className='flex flex-col gap-4'>
@@ -87,6 +121,7 @@ const Tunggu: React.FC = () => {
                           <BiMoney></BiMoney>
                         <h1>Rp{order.price}</h1>
                         </div>
+                       
                       </div>
                       <div className='flex flex-row justify-between mt-4'>
                         <div className='flex flex-row gap-4 justify-center items-center text-center'>
@@ -99,7 +134,7 @@ const Tunggu: React.FC = () => {
                           <a href={`${user.displayName !== order.name ? `https://wa.me/${order.wa}` : 'app/driver'}`}>
                             <BiLogoWhatsapp color={`${user.displayName !== order.name ? '#25D366' : 'gray'}`} size={25}></BiLogoWhatsapp>
                           </a>
-                          <button onClick={()=> Batal({orderId: order.id})}>
+                          <button onClick={()=> Batal({orderId: order.id, price: order.price, titikJemput: order.titikjemput, titikAntar: order.titikantar})}>
                             <FaTrashAlt></FaTrashAlt>
                           </button>
                         

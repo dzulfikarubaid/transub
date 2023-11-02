@@ -92,7 +92,7 @@ const Anter: React.FC = () => {
             <IonContent >
                <div className='w-full p-10 flex flex-col gap-6'>
                {
-                orders !== "" ? 
+                orders !== null && orders.length > 0 ? 
                 orders.map((order: any) => (
                     <div key={order.id} className='p-4 bg-gray-100 rounded-xl'>
                       <div className='flex flex-col gap-4'>

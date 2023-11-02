@@ -66,7 +66,7 @@ const Selesai: React.FC = () => {
             <IonContent >
                <div className='w-full flex flex-col gap-6 p-10'>
                {
-                orders !== null ? 
+                orders !== null && orders.length > 0 ? 
                 orders.map((order: any) => (
                     <div key={order.id} className='p-4 bg-gray-100 rounded-xl'>
                       <div className='flex flex-col gap-4'>

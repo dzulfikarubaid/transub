@@ -6,7 +6,7 @@ import { useHistory } from 'react-router';
 import {TbLocationPin} from 'react-icons/tb'
 import {RiSpeedMiniLine} from 'react-icons/ri'
 import { Link } from 'react-router-dom';
-import { collection, getDoc, getDocs, getFirestore, DocumentData, DocumentSnapshot, doc, Firestore, setDoc } from 'firebase/firestore';
+import { collection, getDoc, getDocs, getFirestore, DocumentData, DocumentSnapshot, doc, Firestore, setDoc, onSnapshot, query, where } from 'firebase/firestore';
 import {BiTimer} from 'react-icons/bi'
 import {GiPathDistance} from 'react-icons/gi'
 import './TLeafletlogo.css'
@@ -43,16 +43,38 @@ const THome: React.FC = () => {
   const [price, setPrice] = useState<any>('');
   const [waktu, setWaktu] = useState<any>('');
   const [Wa, setWa] = useState<any>('');
-  
+  const [confirm, setConfirm] = useState(false);
+  const [saldo, setSaldo] = useState(0);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // console.log(user);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
         setUser(user);
-    } else {
+  
+        const orderCollection = collection(db, 'users');
+  
+        // Menggunakan query untuk mendapatkan data dengan nama (displayName) yang sama
+        // dan hanya dengan status 'ready'
+        const q = query(orderCollection, 
+          where('email', '==', user.email)
+        );
+  
+        const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
+          const ordersData = querySnapshot.docs.map((doc:any) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setSaldo(ordersData[0].saldo);
+        });
+  
+        return () => snapshotUnsubscribe();
+      } else {
         history.push('/signin');
-    }
-});
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [history]);
   const getWa = async () => {
     try {
       if (user) {
@@ -132,6 +154,18 @@ function InputJemput(){
     async function postFirestore(){
       console.log("User UID:", user.uid);
       console.log("Datetime:", datetime);
+      if(saldo >= price){
+        await setDoc(doc(db, "users", user.uid), {
+          saldo: saldo - price
+        }, { merge: true });
+        await setDoc(doc(db, "payment", `${user.uid}#${datetime}`), {
+          uid: user.uid,
+          saldo: '-Rp'+price,
+          create_at: datetime,
+          titikjemput: titikJemput,
+          titikantar: titikAntar,
+          status:"pembayaran"
+        }, { merge: true });
         await setDoc(doc(db, "order", `${user.uid}#${datetime}`), {
             uid: user.uid,
             name: user.displayName,
@@ -154,7 +188,12 @@ function InputJemput(){
             wa: Wa,
             status: "ready"
           });
-          history.push('/app/pesanan')
+      }
+      else{
+        alert("Saldo anda tidak mencukupi")
+      }
+      
+        history.push('/app/pesanan')
     }
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -258,26 +297,45 @@ function InputJemput(){
                     <></>
                     
                 }
+                
                
                 
             </IonContent>
-            <IonFooter>
-            <div className=' p-6 rounded-2xl'>
-            <div className='flex flex-row items-center justify-between mb-6'>
-            <div className='flex flex-row items-center gap-2'><MdOutlinePayments size={25}></MdOutlinePayments>
-            <h1>Rp{price}</h1></div>
-            <div className='flex flex-row items-center gap-2'><BiTimer size={25}></BiTimer>
-            <h1>{waktu} menit</h1></div>
-            <div className='flex flex-row items-center gap-2'><GiPathDistance size={25}></GiPathDistance>
-            <h1>{result} km</h1></div>
+            {
+                confirm ?
+                    <IonFooter >
+                     <div className='p-6 flex flex-col gap-4'>
+                     <h1 className='font-bold'>Konfirmasi pembayaran</h1>
+                     <h1>Apakah anda yakin ingin memesan?</h1>
+                     <div className='flex flex-row justify-between gap-4 items-center'>
+                     <button className='w-1/2 p-2 rounded-3xl bg-blue-900 text-white' onClick={postFirestore}>Iya</button>
+                      <button className='w-1/2 p-2 rounded-3xl bg-gray-500 text-white' onClick={()=>setConfirm(false)}>Tidak</button>
+                     </div>
+                     </div>
+                      
+                    </IonFooter>
+                    :
+                    <IonFooter>
+                    <div className=' p-6 rounded-2xl'>
+                    <div className='flex flex-row items-center justify-between mb-6'>
+                    <div className='flex flex-row items-center gap-2'><MdOutlinePayments size={25}></MdOutlinePayments>
+                    <h1>Rp{price}</h1></div>
+                    <div className='flex flex-row items-center gap-2'><BiTimer size={25}></BiTimer>
+                    <h1>{waktu} menit</h1></div>
+                    <div className='flex flex-row items-center gap-2'><GiPathDistance size={25}></GiPathDistance>
+                    <h1>{result} km</h1></div>
 
-            </div>
-            <button onClick={postFirestore} className='w-full flex flex-row gap-3 items-center justify-center text-xl font-bold bg-blue-900 text-white p-3 rounded-3xl'>
-            <h1>Pesan Transub</h1>
-            <RiSpeedMiniLine size={35}></RiSpeedMiniLine>
-            </button>
-            </div>
-            </IonFooter>
+                    </div>
+                    <button onClick={()=>setConfirm(true)} className='w-full flex flex-row gap-3 items-center justify-center text-xl font-bold bg-blue-900 text-white p-3 rounded-3xl'>
+                    <h1>Pesan Transub</h1>
+                    <RiSpeedMiniLine size={35}></RiSpeedMiniLine>
+                    </button>
+                    </div>
+                    </IonFooter>
+
+
+                }
+            
         </IonPage>
     );
 };

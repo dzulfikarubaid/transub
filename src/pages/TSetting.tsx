@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { IoArrowBack } from 'react-icons/io5';
 
 const Setting: React.FC = () => {
   const history = useHistory();
@@ -54,10 +55,11 @@ const Setting: React.FC = () => {
     <IonPage>
       <IonContent className="">
         <div className='bg-white text-black p-6 h-full'>
-          <div className='flex flex-row'>
+          <div className='flex flex-row items-center gap-4'>
             <button onClick={() => history.goBack()}>
-              <BiArrowBack size={25}></BiArrowBack>
+              <IoArrowBack size={25}></IoArrowBack>
             </button>
+            <h1 className='font-bold text-xl'>Setting</h1>
           </div>
           <div className='bg-white text-gray-800 flex flex-col gap-4 p-4 rounded-2xl '>
             <Link to='/Setting-update' className='flex flex-row  gap-6 w-full py-4'>

@@ -6,6 +6,8 @@ import { auth, db } from '../firebaseConfig';
 import { useHistory } from 'react-router';
 import moment from 'moment';
 import { addDoc, collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { BiArrowBack } from 'react-icons/bi';
+import {IoArrowBack} from 'react-icons/io5';
 const Deposit: React.FC = () => {
     const [email, setEmail] = React.useState('');
     const [order_id, setOrder_id] = React.useState('');
@@ -58,8 +60,20 @@ const Deposit: React.FC = () => {
             }
         }
         const response = await axios.post('https://transub-payment-gateway.vercel.app/api/payment/process-transaction', data, config)
-        console.log(response.data.token)
-        setToken(response.data.token)
+        .then(
+            (response)=>{
+                console.log(response.data)
+                console.log(response.data.token)
+                setToken(response.data.token)
+            }
+        )
+        .catch(
+            (error)=>{
+     
+                setError(error.message)
+            }
+        )
+        
     }
     useEffect(() => {
         if (token && 'snap' in window) {
@@ -131,12 +145,18 @@ const Deposit: React.FC = () => {
             
             <IonContent >
                 
-                <div className='p-10'>
-                  <h1 className='text-xl font-bold mb-6'>Deposit</h1>
+                <div className='p-10 flex flex-col gap-4'>
+                <div className='flex flex-row gap-4 items-center mb-6'>
+            <button onClick={() => history.goBack()}>
+              <IoArrowBack size={25}></IoArrowBack>
+            </button>
+            <h1 className='text-xl font-bold '>Deposit</h1>
+          </div>
+                  
                  
-                <h1 className='text-red-500'>{error}</h1>
-                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-3 py-3 focus:outline-none rounded-lg' type="text" placeholder='Masukkan saldo'/>
-                <button onClick={process} className='w-full text-center p-3 bg-blue-900 rounded-xl text-white mt-6'>Process</button>
+                {error && <p className='text-red-500 text-sm'>{error}</p>}
+                <input value={total} onChange={(e:any) => setTotal(e.target.value)} className='bg-slate-200 w-full px-3 py-3 focus:outline-none rounded-lg' type="text" placeholder='Mau deposit berapa?'/>
+                <button onClick={process} className='w-full text-center p-3 bg-blue-900 rounded-xl text-white '>Process</button>
                 </div>
             </IonContent>
         </IonPage>
