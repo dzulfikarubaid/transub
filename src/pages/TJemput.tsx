@@ -155,6 +155,7 @@ const center = { lat:  -7.288777649928778 , lng: 112.79206222243513 }
     <TileLayer
     url = "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
     subdomains= {['mt0','mt1','mt2','mt3']}
+    maxZoom={20}
 
 // url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
     />
