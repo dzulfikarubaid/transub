@@ -193,6 +193,7 @@ function InputJemput(){
           })
           .then(()=>{
             history.push('/app/pesanan')
+            setConfirm(false)
           })
           .catch((error)=>{
             console.log(error)
