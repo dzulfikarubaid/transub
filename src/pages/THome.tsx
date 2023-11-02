@@ -155,17 +155,6 @@ function InputJemput(){
       console.log("User UID:", user.uid);
       console.log("Datetime:", datetime);
       if(saldo >= price){
-        await setDoc(doc(db, "users", user.uid), {
-          saldo: saldo - price
-        }, { merge: true });
-        await setDoc(doc(db, "payment", `${user.uid}#${datetime}`), {
-          uid: user.uid,
-          saldo: '-Rp'+price,
-          create_at: datetime,
-          titikjemput: titikJemput,
-          titikantar: titikAntar,
-          status:"pembayaran"
-        }, { merge: true });
         await setDoc(doc(db, "order", `${user.uid}#${datetime}`), {
             uid: user.uid,
             name: user.displayName,
@@ -187,13 +176,34 @@ function InputJemput(){
             price: price,
             wa: Wa,
             status: "ready"
-          });
+          }).then(()=>{
+            setDoc(doc(db, "payment", `${user.uid}#${datetime}`), {
+              uid: user.uid,
+              saldo: '-Rp'+price,
+              create_at: datetime,
+              titikjemput: titikJemput,
+              titikantar: titikAntar,
+              status:"pembayaran"
+            }, { merge: true });
+          })
+          .then(()=>{
+            setDoc(doc(db, "users", user.uid), {
+              saldo: saldo - price
+            }, { merge: true });
+          })
+          .then(()=>{
+            history.push('/app/pesanan')
+          })
+          .catch((error)=>{
+            console.log(error)
+            alert(error.message)
+          })
       }
       else{
         alert("Saldo anda tidak mencukupi")
       }
       
-        history.push('/app/pesanan')
+        
     }
   useEffect(() => {
     const intervalId = setInterval(() => {
