@@ -118,10 +118,11 @@ const Routing: React.FC<RoutingProps> = (props) => {
       // url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
   //     url = "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
   //  subdomains= {['mt0','mt1','mt2','mt3']}
-  //  maxZoom={20}
-  url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
-  maxZoom={22}
-subdomains={'abcd'}
+   maxZoom={20}
+  url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
+//   url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
+//   maxZoom={22}
+// subdomains={'abcd'}
     />
     <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
     <Marker position={[x1, y1]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
