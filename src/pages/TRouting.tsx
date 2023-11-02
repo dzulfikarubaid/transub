@@ -52,7 +52,7 @@ const createRoutineMachineLayer = (props:any) => {
       styles: [
         {
           color: 'blue',
-          opacity: 0.7,
+          opacity: 0.5,
           weight: 4
         }
       ]
