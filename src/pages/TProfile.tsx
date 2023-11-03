@@ -16,6 +16,7 @@ const Profile: React.FC = () => {
         signOut(auth)
         history.push('/signin')
     }
+    const [payment, setPayment] = useState<any>(null)
   const [saldo, setSaldo] = useState<any>(0);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -29,7 +30,16 @@ const Profile: React.FC = () => {
         const q = query(orderCollection, 
           where('email', '==', user.email)
         );
-  
+        const q2 = query(collection(db, 'payment'), 
+          where('uid', '==', user.uid)
+        );
+          const snapshotUnsubscribe2 = onSnapshot(q2, (querySnapshot:any) => {
+            const paymentHistory= querySnapshot.docs.map((doc:any) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setPayment(paymentHistory)
+          })
         const snapshotUnsubscribe = onSnapshot(q, (querySnapshot:any) => {
           const ordersData = querySnapshot.docs.map((doc:any) => ({
             id: doc.id,
@@ -38,7 +48,10 @@ const Profile: React.FC = () => {
           setSaldo(ordersData[0].saldo);
         });
   
-        return () => snapshotUnsubscribe();
+        return () => {
+          snapshotUnsubscribe()
+          snapshotUnsubscribe2()
+        };
       } else {
         history.push('/signin');
       }
@@ -82,24 +95,26 @@ const Profile: React.FC = () => {
                     </div>
                     <h1>Riwayat Transaksi</h1>
                     <div className='bg-white p-4 text-gray-800 rounded-2xl text-sm flex flex-col gap-4'>
-                        <div className='flex flex-col gap-2'>
-                        <h1 className='bg-blue-700 text-white p-2  px-3 rounded-xl w-fit'>Driver</h1>
-                        <div className='flex flex-row justify-between pb-2'>
-                        <h1>Pengantaran ke balai kota surabaya</h1>
-                        <h1>+Rp8000</h1>
-                        </div>
-                        </div>
-                        
-                        
+                        {/* {
+                          payment && payment.map((payment:any)=>{
+                            return(
+                              <div className='flex flex-col gap-2  '>
+                              <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
+                              </div>
+                              )
+                              
+
+                        })
+                      } */}
                     </div>
                     <div className='bg-white p-4 text-gray-800 rounded-2xl text-sm flex flex-col gap-4'>
                     <div className='flex flex-col gap-2  '>
-                        <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>Passenger</h1>
+                        {/* <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>Passenger</h1>
                         <div className='flex flex-row justify-between pb-2'>
                         <h1>Diantar ke ITS</h1>
                         <h1>-Rp6000</h1>
                         </div>
-                      
+                       */}
                         </div>
                         
                     </div>
