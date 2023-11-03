@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
         <IonPage>
             <IonContent className="">
            
-            <div className='bg-gradient-to-b from-blue-900 to-blue-500 text-white p-6 h-full'>
+            <div className='bg-gradient-to-b from-blue-900 to-blue-500 text-white p-6 h-fit'>
                 {/* <div className='flex flex-col gap-5'> */}
                 <div className='flex-row flex justify-between items-center'>
                 <div className='flex flex-row  gap-6 w-full py-4'>
@@ -95,29 +95,39 @@ const Profile: React.FC = () => {
                     </div>
                     <h1>Riwayat Transaksi</h1>
                     <div className='bg-white p-4 text-gray-800 rounded-2xl text-sm flex flex-col gap-4'>
-                        {/* {
+                        {
                           payment && payment.map((payment:any)=>{
                             return(
+                             
+                              payment.status === "pembatalan" ? 
                               <div className='flex flex-col gap-2  '>
-                              <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
-                              </div>
+                              <h1>Pengembalian dana</h1>
+                            <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
+                            </div>
+                            :
+                            payment.status === "pembayaran" ?
+                            <div className='flex flex-col gap-2  '>
+                            <h1>Diantar ke {payment.titikantar}</h1>
+                          <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
+                          
+                          </div>
+                          :
+                          payment.status === "penerimaan" ?
+                          <div className='flex flex-col gap-2  '>
+                          <h1>Pengantaran ke {payment.titikantar}</h1>
+                        <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
+                        </div>
+                        :
+                        ""
+
+                             
                               )
                               
 
                         })
-                      } */}
+                      }
                     </div>
-                    <div className='bg-white p-4 text-gray-800 rounded-2xl text-sm flex flex-col gap-4'>
-                    <div className='flex flex-col gap-2  '>
-                        {/* <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>Passenger</h1>
-                        <div className='flex flex-row justify-between pb-2'>
-                        <h1>Diantar ke ITS</h1>
-                        <h1>-Rp6000</h1>
-                        </div>
-                       */}
-                        </div>
-                        
-                    </div>
+                    
                 </div>
                 {
                     isOpen && 
