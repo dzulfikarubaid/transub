@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { useHistory } from 'react-router';
+import { IoArrowBack, IoSearch } from 'react-icons/io5';
 
 
 const UserList: React.FC = () => {
@@ -12,6 +13,7 @@ const UserList: React.FC = () => {
     const [search, setSearch] = React.useState('');
     const [user, setUser] = React.useState<any>(null);
     const [roomId, setRoomId] = React.useState<any>('');
+    const [filteredUsers, setFilteredUsers] = React.useState<any>([]);
     useEffect(() => {
         const fetchData = async () => {
             const userCollection = collection(db, 'users');
@@ -50,7 +52,7 @@ const UserList: React.FC = () => {
                 return userName?.includes(query) || userEmail?.includes(query);
             });
 
-            setUsers(filteredUsers);
+            setFilteredUsers(filteredUsers);
         }
     }
     function createRoom({ userId }: any) {
@@ -71,19 +73,22 @@ const UserList: React.FC = () => {
         <IonPage>
             <IonContent>
                 <div className='flex flex-col gap-4 w-full p-6'>
-                    <div className='flex gap-4 w-full'>
+                    <div className='flex gap-2 w-full'>
+                    <button onClick={() => history.goBack()}>
+                                <IoArrowBack size={25}></IoArrowBack>
+                                </button>
                         <input
                             type='text'
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className='w-full rounded-2xl p-3 bg-gray-100'
+                            className='w-full rounded-2xl p-3 py-2 focus:outline-none bg-gray-100'
                         />
-                        <button onClick={searchUser} className='bg-blue-500 text-white rounded-2xl p-3'>
-                            Search
+                        <button onClick={searchUser} >
+                            <IoSearch size={25}></IoSearch>
                         </button>
                     </div>
-                    {users &&
-                        users.map((user: any) => (
+                    {filteredUsers &&
+                        filteredUsers.map((user: any) => (
                             <button onClick={() => createRoom({userId: user.id})} key={user.id} >
                                 <div className='bg-[#D8E5FD] rounded-xl p-4 flex flex-col gap-2 shadow-lg text-left'>
                                 <h1>{user.data()?.name}</h1>
