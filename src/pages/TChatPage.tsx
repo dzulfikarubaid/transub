@@ -103,7 +103,12 @@ const ChatPage: React.FC = () => {
             unsubscribe();
         };
     }, [history]);
-
+    function truncateText(text:any, maxLength:any) {
+        if (text.length > maxLength) {
+          return text.substring(0, maxLength) + '...';
+        }
+        return text;
+      }
     return (
         <IonPage>
             <IonContent>
@@ -113,25 +118,25 @@ const ChatPage: React.FC = () => {
                                 
                                 <h1 className='text-xl font-bold'>Chat</h1>
                                 <button onClick={() => history.push('/userlist')}>
-                                <IoAddCircleOutline size={25}></IoAddCircleOutline>
+                                <IoAddCircleOutline size={30}></IoAddCircleOutline>
                                 </button>
                             </div>
                             </div>
                             <div className='flex flex-col gap-4 mt-20'>
                     {userRooms.map((room) => (
 
-                        <Link key={room} to={`/chat/${room}`} className='flex flex-col gap-2 '>
+                        <Link key={room} to={`/chat/${room}`} className='flex flex-col gap-2 border-b-[1px] py-2'>
                             <div className='flex gap-4 justify-between items-center'>
-                                <div className='flex gap-4'>
+                                <div className='flex gap-4 items-center'>
                                     <div className='rounded-full  text-center w-10 h-10 py-2 justify-center items-center bg-blue-500 text-white'>
-                                        {userData[room]?.user2.name.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
+                                        {userNames[user.uid === room.split('-')[0] ? room.split('-')[1]?.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2) : room.split('-')[0]]?.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
                                     </div>
                                     <div className='flex flex-col gap-2'>
-                                        <h1 className=''>{userData[room]?.user2.name}</h1>
-                                        <h1>{lastMessages[room]}</h1>
+                                        <h1 className='font-semibold'>{userNames[user.uid === room.split('-')[0] ? room.split('-')[1] : room.split('-')[0]]}</h1>
+                                        <h1>{truncateText(lastMessages[room], 16)}</h1>
                                     </div>
                                 </div>
-                                <h1>{formatTime(lastMessageTimes[room])}</h1>
+                                <h1 className='text-sm self-end'>{formatTime(lastMessageTimes[room])}</h1>
                             </div>
 
                         </Link>

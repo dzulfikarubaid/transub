@@ -14,6 +14,8 @@ const UserList: React.FC = () => {
     const [user, setUser] = React.useState<any>(null);
     const [roomId, setRoomId] = React.useState<any>('');
     const [filteredUsers, setFilteredUsers] = React.useState<any>([]);
+    const [searched, setSearched] = React.useState(false);
+    const [searchedText, setSearchedText] = React.useState('');
     useEffect(() => {
         const fetchData = async () => {
             const userCollection = collection(db, 'users');
@@ -51,8 +53,9 @@ const UserList: React.FC = () => {
                 const userEmail = user.data()?.email?.toLowerCase();
                 return userName?.includes(query) || userEmail?.includes(query);
             });
-
+            setSearched(true)
             setFilteredUsers(filteredUsers);
+            setSearchedText(search)
         }
     }
     function createRoom({ userId }: any) {
@@ -80,8 +83,9 @@ const UserList: React.FC = () => {
                         <input
                             type='text'
                             value={search}
+                            placeholder='Cari nama atau email'
                             onChange={(e) => setSearch(e.target.value)}
-                            className='w-full rounded-2xl p-3 py-2 focus:outline-none bg-gray-100'
+                            className='w-full rounded-xl p-4 py-2 focus:outline-none bg-gray-100'
                         />
                         <button onClick={searchUser} >
                             <IoSearch size={25}></IoSearch>
@@ -90,12 +94,19 @@ const UserList: React.FC = () => {
                     {filteredUsers &&
                         filteredUsers.map((user: any) => (
                             <button onClick={() => createRoom({userId: user.id})} key={user.id} >
-                                <div className='bg-[#D8E5FD] rounded-xl p-4 flex flex-col gap-2 shadow-lg text-left'>
-                                <h1>{user.data()?.name}</h1>
+                                <div className='border-b-[1px] p-4 flex flex-col gap-2 text-left'>
+                                <h1 className='font-semibold'>{user.data()?.name}</h1>
                                 <h1>{user.data()?.email}</h1>
                                 </div>
                             </button>
-                        ))}
+                        ))
+                    
+                    
+                    }
+                    {
+                        searched === true && searchedText != '' && filteredUsers.length === 0 ? <h1 className='text-center'>Tidak ada hasil untuk '{searchedText}'</h1> : ''
+
+                    }
                 </div>
             </IonContent>
         </IonPage>
