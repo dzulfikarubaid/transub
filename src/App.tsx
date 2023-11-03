@@ -39,6 +39,10 @@ import { onAuthStateChanged } from 'firebase/auth';
 import WhatsApp from './pages/TWa';
 import Deposit from './pages/TDeposit';
 import Setting from './pages/TSetting';
+import Socket from './pages/TSocket';
+import UserList from './pages/TUserlist';
+import Chat from './pages/TChat';
+import ChatPage from './pages/TChatPage';
 setupIonicReact();
 
 const App = () => {
@@ -52,9 +56,15 @@ const App = () => {
       <Route exact path={'/antar'}>
       <Antar></Antar>
       </Route>
+      <Route exact path={'/userlist'}>
+        <UserList></UserList>
+      </Route>
       <Route exact path={'/deposit'}>
       <Deposit></Deposit>
       
+      </Route>
+      <Route exact path={'/socket'}>
+        <Socket></Socket>
       </Route>
         <Route exact path="/profile">
           <Profile></Profile>
@@ -91,6 +101,12 @@ const App = () => {
         </Route>
         <Route path={'/success'}>
           <Success></Success>
+        </Route>
+        <Route path={'/chat/:id'}>
+          <Chat></Chat>
+        </Route>
+        <Route exact path='/chat'>
+          <ChatPage></ChatPage>
         </Route>
         
 

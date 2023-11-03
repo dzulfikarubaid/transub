@@ -85,19 +85,14 @@ const Driver: React.FC = () => {
             orders.map((order: any) => (
               <div key={order.id} className='p-4 bg-gray-100 rounded-xl'>
                 <div className='flex flex-col gap-4'>
-                  {order.avatar === null ? (
-                    <div className='flex gap-4  items-center'>
-                      <div className='rounded-full w-10 text-center p-2 bg-blue-500 text-white'>
-                        {order.name.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
-                      </div>
-                      <h1>{order.name}</h1>
+            
+                  <div className='flex gap-4  items-center'>
+                    <div className='rounded-full w-10 text-center p-2 bg-blue-500 text-white'>
+                      {order.name.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
                     </div>
-                  ) : (
-                    <div className='flex gap-4  items-center'>
-                      <img className='rounded-full w-10 h-auto' src={order.avatar} alt='' />
-                      <h1>{order.name}</h1>
-                    </div>
-                  )}
+                    <h1>{order.name}</h1>
+                  </div>
+                
                   <h1>{getTimeAgo(order.date)}</h1>
                   <div className='flex flex-row gap-1 items-center'>
                     <BiTimer></BiTimer>
