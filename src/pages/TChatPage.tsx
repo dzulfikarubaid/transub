@@ -129,7 +129,7 @@ const ChatPage: React.FC = () => {
                             <div className='flex gap-4 justify-between items-center'>
                                 <div className='flex gap-4 items-center'>
                                     <div className='rounded-full  text-center w-10 h-10 py-2 justify-center items-center bg-blue-500 text-white'>
-                                        {userNames[user.uid === room.split('-')[0] ? room.split('-')[1]?.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2) : room.split('-')[0]]?.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
+                                        {userNames[user.uid === room.split('-')[0] ? room.split('-')[1] : room.split('-')[0]]?.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
                                     </div>
                                     <div className='flex flex-col gap-2'>
                                         <h1 className='font-semibold'>{userNames[user.uid === room.split('-')[0] ? room.split('-')[1] : room.split('-')[0]]}</h1>
