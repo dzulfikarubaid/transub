@@ -70,7 +70,7 @@ const App = () => {
           <Profile></Profile>
         </Route>
         <Route exact path="/">
-          <Start/>
+          <SignIn></SignIn>
         </Route>
         <Route exact path="/signin">
           <SignIn/>

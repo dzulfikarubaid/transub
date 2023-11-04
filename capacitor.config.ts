@@ -2,8 +2,8 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   
-  appId: 'io.ionic.starter',
-  appName: 'Transub.id',
+  appId: 'com.transub.id',
+  appName: 'Transub',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
