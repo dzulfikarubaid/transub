@@ -39,6 +39,9 @@ const Profile: React.FC = () => {
             ...doc.data(),
           }));
           setPayment(paymentHistory)
+          const sortedPaymentHistory = paymentHistory.sort((a: any, b: any) => b.create_at.toDate() - a.create_at.toDate());
+
+          setPayment(sortedPaymentHistory);
         })
         const snapshotUnsubscribe = onSnapshot(q, (querySnapshot: any) => {
           const ordersData = querySnapshot.docs.map((doc: any) => ({
