@@ -90,7 +90,10 @@ const createRoutineMachineLayer = (props: RoutingProps) => {
   return instance;
 };
 
-const RoutingMachine = createControlComponent(createRoutineMachineLayer);
+const RoutingMachine = createControlComponent(
+  createRoutineMachineLayer,
+  ['x1', 'y1', 'x2', 'y2'] // Tambahkan properti yang dibutuhkan di sini
+);
 
 const Routing: React.FC<RoutingProps> = (props) => {
   const { x1, y1, x2, y2 } = props;
@@ -115,5 +118,8 @@ const Routing: React.FC<RoutingProps> = (props) => {
     </MapContainer>
   );
 };
+
+export default Routing;
+
 
 export default Routing;
