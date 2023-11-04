@@ -1,6 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { auth, db } from '../firebaseConfig';
@@ -43,28 +43,39 @@ const ChatPage: React.FC = () => {
 
                 const messagesCollection = collection(db, 'messages');
                 const userRooms: string[] = [];
+                const orderedMessagesQuery = query(messagesCollection, orderBy('createdAt', 'desc'));
 
-                const unsubscribeSnapshot = onSnapshot(messagesCollection, async (querySnapshot: any) => {
+                const unsubscribeSnapshot = onSnapshot(orderedMessagesQuery, async (querySnapshot: any) => {
+                    console.log(querySnapshot.docs);
                     const userRoomsSet: Set<string> = new Set();
                     const lastMessages: Record<string, string> = {};
                     const lastMessageTimes: Record<string, string> = {};
-
+                
                     querySnapshot.docs.forEach((doc: any) => {
                         const roomId = doc.data().room;
                         const [user1, user2] = roomId.split('-');
-
+                
                         if (user1 === user.uid || user2 === user.uid) {
                             userRoomsSet.add(roomId);
-                            lastMessages[roomId] = doc.data().text;
-                            lastMessageTimes[roomId] = doc.data().createdAt;
+                
+                            // Periksa apakah dokumen terkait dengan ruangan ini
+                            if (!lastMessages[roomId] || doc.data().createdAt > lastMessageTimes[roomId]) {
+                                lastMessages[roomId] = doc.data().text;
+                                lastMessageTimes[roomId] = doc.data().createdAt;
+                            }
                         }
                     });
-
+                
+                    // Menggunakan indeks 0 untuk mendapatkan pesan terbaru
+                    const newestRoomId = userRoomsSet.values().next().value;
+                    console.log(`Newest Room: ${newestRoomId}, Newest Message: ${lastMessages[newestRoomId]}`);
+                    
                     const rooms = Array.from(userRoomsSet);
                     setUserRooms(rooms);
                     setLastMessages(lastMessages);
                     setLastMessageTimes(lastMessageTimes);
-                    console.log(lastMessageTimes[rooms[0]]);
+                
+                
 
                     // Dapatkan nama pengguna untuk user1 dan user2
                     for (const room of rooms) {
