@@ -120,6 +120,3 @@ const Routing: React.FC<RoutingProps> = (props) => {
 };
 
 export default Routing;
-
-
-export default Routing;
