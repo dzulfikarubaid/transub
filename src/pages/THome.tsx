@@ -206,15 +206,15 @@ function InputJemput(){
       
         
     }
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        fetchAntar();
-        fetchJemput();
-        fetchSummary();
-      }, 500);
-    
-      return () => clearInterval(intervalId);
-    }, []);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchAntar();
+      fetchJemput();
+      fetchSummary();
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     getWa();
@@ -222,20 +222,18 @@ function InputJemput(){
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      RoutingMap();
       fetchSummary();
     }, 100);
-  
+
     return () => clearInterval(intervalId);
   }, [valueLatAntar, valuelngAntar, valueLatjemput, valuelngjemput]);
-  
-  const RoutingMap = () => {
-    if (valueLatAntar !== '' && valuelngAntar !== '' && valueLatjemput !== '' && valuelngjemput !== '') {
-      return <Routing x1={valueLatAntar} y1={valuelngAntar} x2={valueLatjemput} y2={valuelngjemput} />;
-    } else {
-      return null; // atau tampilkan placeholder atau pesan bahwa nilai belum tersedia
-    }
-  };
+ const RoutingMap = () => {
+  if (valueLatAntar !== '' && valuelngAntar !== '' && valueLatjemput !== '' && valuelngjemput !== '') {
+    return <Routing x1={valueLatAntar} y1={valuelngAntar} x2={valueLatjemput} y2={valuelngjemput} />;
+  } else {
+    return null; // atau tampilkan placeholder atau pesan bahwa nilai belum tersedia
+  }
+};
 
   useEffect(() => {
     const intervalId = setInterval(() => {
