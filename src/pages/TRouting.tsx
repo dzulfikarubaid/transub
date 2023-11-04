@@ -36,87 +36,106 @@ const customIcon = new L.Icon({
   iconAnchor: [16, 32], // titik ancor di bagian bawah marker
   popupAnchor: [0, -32], // titik ancor popup
 });
-const createRoutineMachineLayer = (props: RoutingProps) => {
-  const { x1, y1, x2, y2 }: any = props;
-  const [waktu, setWaktu] = React.useState(0);
-  const [distance, setDistance] = React.useState(0);
-  const [price, setPrice] = React.useState(0);
-
+const createRoutineMachineLayer = (props:any) => {
+    const { x1, y1, x2, y2 }:any = props
+    const [waktu, setWaktu] = React.useState(0);
+    const [distance, setDistance] = React.useState(0);
+    const [price, setPrice] = React.useState(0);
   const instance = L.Routing.control({
-    waypoints: [L.latLng(x1, y1), L.latLng(x2, y2)],
+    waypoints: [
+      L.latLng(x1, y1),
+      L.latLng(x2, y2)
+    ],
     lineOptions: {
-      extendToWaypoints: true,
-      missingRouteTolerance: 5,
+      extendToWaypoints: true, // Add this property
+    missingRouteTolerance: 5,
       styles: [
         {
           color: '#3A9BDC',
           opacity: 1,
-          weight: 4,
-        },
-      ],
+          weight: 4
+        }
+      ]
     },
     show: false,
     addWaypoints: false,
     fitSelectedRoutes: true,
     showAlternatives: false,
+    
   });
-
-  instance.on('routesfound', function (e: any) {
+  instance.on('routesfound', function(e:any) {
     var routes = e.routes;
     var summary = routes[0].summary;
-
+    // alert distance and time in km and minutes
     Preferences.set({
-      key: 'distance',
-      value: (summary.totalDistance / 1000).toFixed(2).toString(),
-    });
-    Preferences.set({
-      key: 'waktu',
-      value: Math.round(summary.totalTime % 3600 / 60).toString(),
-    });
-
-    if (summary.totalDistance / 1000 > 5) {
-      Preferences.set({
-        key: 'price',
-        value: Math.round(5 * 2000 + (summary.totalDistance / 1000 - 5) * 1000).toString(),
+        key: 'distance',
+        value: (summary.totalDistance / 1000).toFixed(2).toString(),
       });
-    } else {
-      Preferences.set({
+    Preferences.set({
+        key: 'waktu',
+        value: Math.round(summary.totalTime % 3600 / 60).toString(),
+      });
+   if(summary.totalDistance/1000 > 5){
+    Preferences.set({
+        key: 'price',
+        value: Math.round(5 * 2000 + (summary.totalDistance / 1000-5) * 1000).toString(),
+    })
+   }
+   else{
+    Preferences.set({
         key: 'price',
         value: Math.round(summary.totalDistance / 1000 * 2000).toString(),
-      });
-    }
-  });
-
+    })
+    
+   }
+ })
   return instance;
 };
 
-const RoutingMachine = createControlComponent(
-  createRoutineMachineLayer,
-  ['x1', 'y1', 'x2', 'y2'] // Tambahkan properti yang dibutuhkan di sini
-);
+
+
+const RoutingMachine = createControlComponent(createRoutineMachineLayer);
+
 
 const Routing: React.FC<RoutingProps> = (props) => {
-  const { x1, y1, x2, y2 } = props;
-
+    const { x1, y1, x2, y2 } = props
+  
+ 
   return (
-    <MapContainer
-      style={{ width: '100%', height: '400px', margin: '0 auto' }}
-      center={{ lat: -7.288777649928778, lng: 112.79206222243513 }}
-      zoom={15}
-      scrollWheelZoom={false}
-      touchZoom={false}
-      doubleClickZoom={true}
+
+   
+      <MapContainer
+     style={{ width: '300px !important', height: '400px', margin: '0 auto' }}
+    center={{ lat:  -7.288777649928778 , lng: 112.79206222243513 }}
+    zoom={15}
+    scrollWheelZoom={false}
+    touchZoom={false}
+    doubleClickZoom={true}
+  
     >
-      <TileLayer
-        url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
-      />
+    <TileLayer
 
-      <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2} />
+      url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
+  //     url = "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+  //  subdomains= {['mt0','mt1','mt2','mt3']}
+  //  maxZoom={20}
+  // url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
+//   url="https://{s}.tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=LQSbQNKkuQysgah4V5mNAwvuaRXl7jODkexfifakY8BuWYbrv5kA7DU9FNxzHrkt"
+//   maxZoom={22}
+// subdomains={'abcd'}
+    />
+    <RoutingMachine x1={x1} y1={y1} x2={x2} y2={y2}/>
+    <Marker position={[x1, y1]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
+      
+      </Marker>
+      <Marker position={[x2, y2]}  icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
 
-      <Marker position={[x1, y1]} icon={customIcon}></Marker>
-      <Marker position={[x2, y2]} icon={customIcon}></Marker>
-    </MapContainer>
+      </Marker>
+    
+    
+    
+  </MapContainer>
+
   );
-};
-
-export default Routing;
+}
+export default Routing
