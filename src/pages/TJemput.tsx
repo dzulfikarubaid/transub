@@ -153,7 +153,7 @@ const center = { lat:  -7.288777649928778 , lng: 112.79206222243513 }
     ref={setMap}
     >
     <TileLayer
-    url = "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+    url = "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
     subdomains= {['mt0','mt1','mt2','mt3']}
     maxZoom={20}
 
