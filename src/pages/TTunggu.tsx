@@ -129,7 +129,7 @@ const Tunggu: React.FC = () => {
                         )} */}
                        
                         <div className='w-full flex gap-6'>
-                          <img className='w-20 h-20' src="tunggu.png" alt="" />
+                          <img className='w-[80px] h-fit' src="/tunggu.png" alt="" />
                           <div>
                             <h1 className='font-semibold text-sm'>{order.titikjemput}</h1>
                           <div className='flex flex-row gap-1 items-center'>
@@ -158,7 +158,7 @@ const Tunggu: React.FC = () => {
                 
                         <button
                          onClick={()=> Batal({orderId: order.id, price: order.price, titikJemput: order.titikjemput, titikAntar: order.titikantar})}
-                        className={`flex flex-row gap-3 items-center justify-center  p-2 px-3 rounded-xl text-white  bg-gradient-to-l from-gray-600 to-gray-500`}
+                        className={`flex flex-row gap-3 items-center justify-center  p-2 px-3 rounded-xl text-white  bg-gradient-to-r from-red-500 to-pink-500`}
                       >
                         <h1>Batalkan</h1>
                 

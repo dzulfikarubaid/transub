@@ -9,9 +9,23 @@ import { BiInfoCircle, BiLogoWhatsapp, BiMoney, BiTimer, BiWind } from 'react-ic
 import moment from 'moment';
 const Anter: React.FC = () => {
   const [user, setUser] = useState<any>(null)
+  const [driver, setDriver] = useState<any>(null)
   const [orders, setOrders] = useState<any>("")
   const history = useHistory()
   const [saldo, setSaldo] = useState(0);
+  const getTimeAgo = (date: string) => {
+    const now = moment();
+    const orderDate = moment(date);
+    const diff = now.diff(orderDate, 'minutes');
+
+    if (diff < 60) {
+      return `${diff} menit yang lalu`;
+    } else if (diff < 1440) {
+      return `${Math.floor(diff / 60)} jam yang lalu`;
+    } else {
+      return orderDate.format('MMMM D, YYYY [at] h:mm A');
+    }
+  };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -38,7 +52,7 @@ const Anter: React.FC = () => {
               id: doc.id,
               ...doc.data(),
             }));
-
+            // setDriver(ordersData2)
 
             const combinedOrdersData = [...ordersData1, ...ordersData2];
 
@@ -108,22 +122,29 @@ const Anter: React.FC = () => {
             orders !== null && orders.length > 0 ?
               orders.map((order: any) => (
                 <div key={order.id} className='p-4 bg-white shadow-md border-[1px] rounded-xl'>
-                  <div className='flex flex-col gap-4'>
+                  <h1>{getTimeAgo(order.date)}</h1>
+                  <div className='flex flex-col gap-4 mt-4'>
                     {order.avatar === null ? (
                       <div className='flex gap-4  items-center'>
-                        <div className='rounded-full w-10 text-center p-2 bg-blue-500 text-white'>
+                        <div className='rounded-full w-10 text-center p-2 bg-gradient-to-l from-blue-500 to-blue-900 text-white'>
                           {order.name.split(' ').map((kata: any) => kata[0]).join('').toUpperCase().substring(0, 2)}
                         </div>
                         <h1>{order.name}</h1>
+                        
                       </div>
                     ) : (
                       <div className='flex gap-4  items-center'>
                         <img className='rounded-full w-10 h-auto' src={order.avatar} alt='' />
                         <h1>{order.name}</h1>
+
                       </div>
                     )}
 
-                    <div className='flex flex-row gap-1 items-center'>
+                   <div className='flex flex-row gap-4 '>
+                    <img className='w-[80px] h-fit' src="/antar.png" alt="" />
+                   <div className=''>
+                   <h1 className='font-semibold text-sm'>{order.titikjemput}</h1>
+                   <div className='flex flex-row gap-1 items-center'>
                       <BiTimer></BiTimer>
                       <h1>{order.waktu} menit</h1>
                     </div>
@@ -131,6 +152,9 @@ const Anter: React.FC = () => {
                       <BiMoney></BiMoney>
                       <h1>Rp{order.price}</h1>
                     </div>
+                   
+                   </div>
+                   </div>
                   </div>
                   <div className='flex flex-row justify-between mt-4'>
                     <div className='flex flex-row gap-4 justify-center items-center text-center'>
@@ -140,9 +164,9 @@ const Anter: React.FC = () => {
                       >
                         <BiInfoCircle size={25}></BiInfoCircle>
                       </button>
-                      <a href={`${user.displayName !== order.name ? `https://wa.me/${order.wa}` : 'app/driver'}`}>
+                      {/* <a href={`${user.displayName !== order.name ? `https://wa.me/${order.wa}` : 'app/driver'}`}>
                         <BiLogoWhatsapp color={`${user.displayName !== order.name ? '#25D366' : 'gray'}`} size={25}></BiLogoWhatsapp>
-                      </a>
+                      </a> */}
 
                     </div>
                     {
@@ -151,7 +175,7 @@ const Anter: React.FC = () => {
                         <button
                           onClick={() => RealSelesai({ orderId: order.id, driver: order.driver, price: order.price, titikJemput: order.titikjemput, titikAntar: order.titikantar })}
 
-                          className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-blue-500 `}
+                          className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-gradient-to-l from-blue-500 to-blue-900 `}
                         >
                           <h1>Konfirmasi Selesai</h1>
 
@@ -159,19 +183,19 @@ const Anter: React.FC = () => {
                         :
                         user.uid === order.driver && order.status === "menunggu konfirmasi"
                           ?
-                          <button
+                          <h1
 
-                            className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-blue-500 `}
+                            className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-blue-900 `}
                           >
                             <h1>Menunggu Konfirmasi</h1>
 
-                          </button>
+                          </h1>
                           :
                           user.displayName !== order.name
                             ?
                             <button
                               onClick={() => DriverSelesai({ orderId: order.id })}
-                              className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-blue-500 `}
+                              className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-gradient-to-l from-blue-500 to-blue-900 `}
                             >
                               <h1>Selesai</h1>
 
@@ -179,13 +203,13 @@ const Anter: React.FC = () => {
 
 
                             :
-                            <button
+                            <h1
 
-                              className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white bg-blue-500 `}
+                              className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl bg-gradient-to-l text-blue-900 `}
                             >
                               <h1>Sedang diantar</h1>
 
-                            </button>
+                            </h1>
 
                     }
 
