@@ -66,7 +66,7 @@ const Tunggu: React.FC = () => {
         await setDoc(doc(db, "payment", `${user.uid}#${datetime}`), {
           uid: user.uid,
           saldo: '+Rp'+price,
-          create_at: datetime,
+          create_at: moment().format(),
           titikjemput: titikJemput,
           titikantar: titikAntar,
           status:"pembatalan"

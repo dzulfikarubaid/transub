@@ -18,6 +18,7 @@ const Profile: React.FC = () => {
   }
   const [payment, setPayment] = useState<any>(null)
   const [saldo, setSaldo] = useState<any>(0);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -38,10 +39,11 @@ const Profile: React.FC = () => {
             id: doc.id,
             ...doc.data(),
           }));
-          setPayment(paymentHistory)
-          const sortedPaymentHistory = paymentHistory.sort((a: any, b: any) => b.create_at.toDate() - a.create_at.toDate());
+          const sortedPaymentHistory = paymentHistory.sort((a: any, b: any) => a.create_at - b.create_at);
+          console.log(sortedPaymentHistory)
+        setPayment(sortedPaymentHistory);
 
-          setPayment(sortedPaymentHistory);
+
         })
         const snapshotUnsubscribe = onSnapshot(q, (querySnapshot: any) => {
           const ordersData = querySnapshot.docs.map((doc: any) => ({
@@ -120,24 +122,24 @@ const Profile: React.FC = () => {
         <h1 className='font-bold'>Riwayat Transaksi</h1>
         <div className='bg-white mt-5 text-gray-800  text-sm flex flex-col gap-4'>
           {
-            payment && payment.sort((a: any, b: any) => new Date(a.create_at).getTime() - new Date(b.create_at).getTime()).map((payment: any) => {
+            payment && payment.map((payment: any) => {
               return (
 
                 payment.status === "pembatalan" ?
-                  <div className='flex flex-col gap-2  '>
+                  <div key={payment.id} className='flex flex-col gap-2  '>
                     <h1>Pengembalian dana</h1>
                     <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
                   </div>
                   :
                   payment.status === "pembayaran" ?
-                    <div className='flex flex-col gap-2  '>
+                    <div key={payment.id} className='flex flex-col gap-2  '>
                       <h1>Diantar ke {payment.titikantar}</h1>
                       <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
 
                     </div>
                     :
                     payment.status === "penerimaan" ?
-                      <div className='flex flex-col gap-2  '>
+                      <div key={payment.id} className='flex flex-col gap-2  '>
                         <h1>Pengantaran ke {payment.titikantar}</h1>
                         <h1 className='bg-gray-400 text-white p-2  px-3 rounded-xl w-fit'>{payment.saldo}</h1>
                       </div>
