@@ -74,12 +74,6 @@ const Profile: React.FC = () => {
           {/* <div className='flex flex-col gap-5'> */}
           <div className='flex-row flex justify-between items-center'>
             <div className='flex flex-row  gap-6 w-full py-4'>
-              {!user.photoURL ?
-                <div className='rounded-full text-center p-3 bg-blue-500 text-white'>
-                  {user?.displayName && user.displayName.split(" ").map((kata: any) => kata[0]).join("").toUpperCase().substring(0, 2)}
-                </div>
-                :
-                <img src={user.photoURL} className='w-10 h-auto rounded-full'></img>}
               <div className='flex flex-col gap-1'>
                 <h3 className='font-bold'>{user?.displayName && user.displayName}</h3>
                 <h3>{user?.email && user?.email}</h3>
