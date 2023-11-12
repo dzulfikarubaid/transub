@@ -12,7 +12,11 @@ function SignIn() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const history = useHistory()
-   
+    onAuthStateChanged(auth, (user) => {
+        if(user){
+            history.push('/app')
+        }
+    })
     const signin = async () =>{
         try{
             const user = await signInWithEmailAndPassword(auth, email, password)

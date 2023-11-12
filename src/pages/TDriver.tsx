@@ -5,11 +5,15 @@ import { collection, doc, getFirestore, onSnapshot, query, setDoc, where } from 
 import moment from 'moment';
 import { IonContent, IonFooter, IonPage } from '@ionic/react';
 import { FaTimes } from 'react-icons/fa';
-import { BiInfoCircle, BiLogoWhatsapp, BiMoney, BiTimer, BiWind } from 'react-icons/bi';
+import { BiChat, BiInfoCircle, BiLogoWhatsapp, BiMoney, BiTimer, BiWind } from 'react-icons/bi';
 import Routing from './TRouting';
 import { auth } from '../firebaseConfig';
 import './signin.css';
 import { FaRemoveFormat } from 'react-icons/fa';
+import { BsFillChatLeftDotsFill } from 'react-icons/bs';
+import { IoChatbubbleEllipsesOutline, IoChatbubbleOutline } from 'react-icons/io5';
+import { MdOutlineChat, MdOutlineChatBubbleOutline } from 'react-icons/md';
+import { PiChatCircleDotsBold } from 'react-icons/pi';
 const db = getFirestore();
 
 const Driver: React.FC = () => {
@@ -78,7 +82,7 @@ const Driver: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <div className={`flex flex-col gap-4 p-10 ${isOpen ? 'bg-gray-400/30' : ''}`}>
+        <div className={`flex flex-col gap-4 p-6 ${isOpen ? 'bg-gray-400/30' : ''}`}>
           <h1 className='font-bold text-xl'>Ayo antar</h1>
           {
             orders.length > 0 ?
@@ -115,7 +119,7 @@ const Driver: React.FC = () => {
                       <BiInfoCircle size={25}></BiInfoCircle>
                     </button>
                     <a href={`${user.displayName !== order.name ? `https://wa.me/${order.wa}` : 'app/driver'}`}>
-                      <BiLogoWhatsapp color={`${user.displayName !== order.name ? '#25D366' : 'gray'}`} size={25}></BiLogoWhatsapp>
+                      <PiChatCircleDotsBold color={`${user.displayName !== order.name ? 'black' : 'gray'}`} size={25}></PiChatCircleDotsBold>
                     </a>
                   
                   </div>
@@ -123,7 +127,7 @@ const Driver: React.FC = () => {
                     onClick={() => Gas({ orderId: order.id })}
                     disabled={user.displayName === order.name}
                     className={`flex flex-row gap-3 items-center justify-center  p-2 rounded-xl text-white ${
-                      user.displayName === order.name ? 'bg-gray-300' : 'bg-blue-900'
+                      user.displayName === order.name ? 'bg-gray-300' : 'bg-gradient-to-l from-blue-900 to-blue-600'
                     }`}
                   >
                     <h1>Gas</h1>

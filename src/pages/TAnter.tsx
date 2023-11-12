@@ -103,11 +103,11 @@ const Anter: React.FC = () => {
     <IonPage>
 
       <IonContent >
-        <div className='w-full p-10 flex flex-col gap-6'>
+        <div className='w-full p-2 flex flex-col gap-6'>
           {
             orders !== null && orders.length > 0 ?
               orders.map((order: any) => (
-                <div key={order.id} className='p-4 bg-gray-100 rounded-xl'>
+                <div key={order.id} className='p-4 bg-white shadow-md border-[1px] rounded-xl'>
                   <div className='flex flex-col gap-4'>
                     {order.avatar === null ? (
                       <div className='flex gap-4  items-center'>
